@@ -18,6 +18,7 @@ To run code from this repository
     my_user = CustomUser.objects.get(username=append_your_super_user_name_to_this_query)
     my_user.active = True
     my_user.save()
+    exit()
 
 6. Start up local server - docker-compose up
 
