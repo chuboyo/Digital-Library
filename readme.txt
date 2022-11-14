@@ -15,7 +15,7 @@ To run code from this repository
 5. Set superuser account to active from django shell 
     docker-compose run --rm app sh -c "python manage.py shell"
     from users.models import CustomUser
-    my_user = CustomUser.objects.get(username=append_your_super_user_name_to_this_query)
+    my_user = CustomUser.objects.get(username='append_your_super_user_name_to_this_query')
     my_user.active = True
     my_user.save()
     exit()
