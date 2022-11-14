@@ -1,0 +1,155 @@
+/*
+    DEMO STYLE
+*/
+@import "http://fonts.googleapis.com/css?family=Lato:400,700";
+body {
+    font-family: 'Lato';
+    background: #FFFFFF;
+    font-size: 1.0em;
+}
+
+p {
+    font-family: 'Lato';
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+.enclose {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+#leftHand {
+    min-width: 514px;
+    max-width: 514px;
+    background-image: linear-gradient(to right, rgba(4, 129, 68, 0.8), rgba(4, 129, 68, 0.8)), url('/static/static/images/drawer2.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: #fff;
+    transition: all 0.3s;
+
+    /* top: 0;
+    position: fixed; */
+}
+
+#leftHand.active {
+    margin-left: -514px;
+}
+
+img {
+    display: block;
+    margin-left: 64px;
+    margin-right: 354px;
+    margin-top: 178px;
+    margin-bottom: 25px;
+  }
+
+.alignHeader {
+    display: block;
+    margin-left: 64px;
+    margin-right: 88px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    color: #FAFAF7;   
+}
+
+.alignText {
+    display: block;
+    margin-left: 64px;
+    margin-right: 88px;
+    margin-top: 0px;
+    margin-bottom: 383px; 
+    color: #C7ffda;  
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+#rightHand {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    margin-top: 0px;
+    margin-left: 100px;
+}
+
+#sidebarCollapsing:focus {
+    background: #E2E8EA;
+    box-shadow:none;
+    border-color: #02763D;
+}
+
+#loginButton{
+    color: #FAFAF7 !important;
+    background: #128E51 !important;
+}
+
+#loginBody{
+    margin-top: 80px;
+}
+
+#loginButton2{
+    color: #4D4D4D !important;
+    background: #E7F5EE !important;
+    border-color: #E7F5EE !important;
+}
+
+#registerButton{
+    color: #545F62 !important;
+    background: #E7F5EE !important;
+    border: none;
+}
+
+#exampleFormControlInput1{
+    background: #EDEDED;
+    box-shadow:none;
+}
+
+#exampleFormControlInput1:focus {
+    background: #EDEDED;
+    box-shadow:none;
+    border-color: #26BE73;
+}
+
+#flexCheckDefault{
+    box-shadow:none;
+    border-color: #148D4B;
+}
+
+#flexCheckDefault:checked{
+    background: #148D4B;
+    box-shadow:none;
+    border-color: #148D4B;
+}
+
+#altLinkColor {
+    color: #999;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #leftHand {
+        margin-left: -514px;
+    }
+}
+
+
+
+
+
+
+
+
+
+

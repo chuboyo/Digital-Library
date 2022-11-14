@@ -1,0 +1,102 @@
+/*
+    DEMO STYLE
+*/
+
+@import "http://fonts.googleapis.com/css?family=Lato:400,700";
+body {
+    font-family: 'Lato';
+    background: #FFFFFF;
+    font-size: 1.0em;
+}
+
+p {
+    font-family: 'Lato';
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#topLabel {
+    margin-top: 0px;
+    margin-bottom: 0px; 
+}
+
+.resetDoneBody{
+    margin-top: 217px;
+    border: 1px solid #F4FAF7;
+    padding: 4px;
+    border-radius: 20%;
+    background: #F4FAF7;
+}
+
+.resetDoneP{
+    margin-left: 380px;
+    margin-right: 380px;
+}
+
+#customButton1{
+    color: #FAF4F7 !important;
+    background: #128E51 !important;
+}
+
+.verificationDoneBody{
+    margin-top: 140px;
+    border: 1px solid #F4FAF7;
+    padding: 4px;
+    border-radius: 20%;
+    background: #F4FAF7;
+}
+
+#customButton2{
+    color: #3C4548 !important;
+    background: #E7F5EE !important;
+    border-color: #E7F5EE !important;
+}
+
+#exampleFormControlInput1{
+    background: #EDEDED;
+    box-shadow:none;
+}
+
+#exampleFormControlInput1:focus {
+    background: #EDEDED;
+    box-shadow:none;
+    border-color: #26BE73;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .resetDoneP {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}

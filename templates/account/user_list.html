@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block head_title %}{% trans "User List View" %}{% endblock %}
+
+{% block content %}
+<div class="container text-start">
+    <div class="row">
+      <div class="col-12">
+        <h4>Users</h4>
+      </div>
+    </div>
+</div>
+
+<div class="container text-start mb-4">
+    <div class="row">
+      <div class="col-lg-8">
+        <p>Browse details of all users on the digital library platform</p>
+      </div>
+      <div class="col-lg-2">
+        <select class="form-select" aria-label="Default select example" id="userListDropdown">
+            <option selected>Sort by: Name</option>
+            <option value="1">Sort by: Date</option>
+        </select>
+      </div>
+      <div class="col-lg-2">
+        <a href=""><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+        </svg></a>
+      </div>
+    </div>
+</div>
+<li class="nav-item"><a class="nav-link" href="{{ user.get_absolute_url }}">Account</a></li>
+
+<div class="container text-start pt-2" id="tableHeading">
+    <div class="row">
+      <div class="col-lg-2">
+        <p>Name</p>
+      </div>
+      <div class="col-lg-3">
+        <p>Email</p>
+      </div>
+      <div class="col-lg-1">
+        <p>Role(s)</p>
+      </div>
+      <div class="col-lg-2">
+        <p>Status</p>
+      </div>
+      <div class="col-lg-2">
+        <p>Action</p>
+      </div>
+      <div class="col-lg-2">
+        <p></p>
+      </div>
+    </div>
+</div>
+
+<div class="container text-start pt-2" id="tableBody">
+    <div class="row" id="tableRow">
+      <div class="col-lg-2">
+        <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;Chubiyojo Akoji</p>
+      </div>
+      <div class="col-lg-3">
+        <p>akojichubiyojo1997@gmail.com</p>
+      </div>
+      <div class="col-lg-1">
+        <p>Manager</p>
+      </div>
+      <div class="col-lg-2">
+        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomActive">Active</span>
+      </div>
+      <div class="col-lg-2 text-start">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
+            <label class="form-check-label" for="flexSwitchCheckDisabled">Set as admin</label>
+        </div>
+      </div>
+      <div class="col-lg-2">
+        <p id="actionLabel">Delete user</p>
+      </div>
+    </div>
+</div>
+
+<div class="container text-start pt-2" id="tableBody">
+    <div class="row" id="tableRow">
+      <div class="col-lg-2">
+        <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;Chubiyojo Akoji</p>
+      </div>
+      <div class="col-lg-3">
+        <p>akojichubiyojo1997@gmail.com</p>
+      </div>
+      <div class="col-lg-1">
+        <p>Manager</p>
+      </div>
+      <div class="col-lg-2">
+        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">Awaiting Activation</span>
+      </div>
+      <div class="col-lg-2">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
+            <label class="form-check-label" for="flexSwitchCheckDisabled">Set as admin</label>
+        </div>
+      </div>
+      <div class="col-lg-2">
+        <p id="actionLabel">Delete user</p>
+      </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

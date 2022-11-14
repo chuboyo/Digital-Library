@@ -1,0 +1,6 @@
+Django
+Psycopg2-binary
+django-allauth
+Pillow
+django-auto-logout
+pytz

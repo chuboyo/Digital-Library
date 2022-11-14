@@ -1,0 +1,52 @@
+{% extends "base3.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Edit User View" %}{% endblock %}
+
+{% block content %}
+    <!-- <h1>{% trans "Edit User is Under Construction" %}</h1>
+
+    <form class="" method="POST" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="" type="submit">{% trans "submit" %}</button>
+    </form> -->
+    <form class="width-50 py-4" action="" method="post">{% csrf_token %}
+        <p><label for="id_email">Email Address:</label> {{form.profile_picture}}</p>
+        <p><label for="id_email">Email Address:</label> {{form.email}}</p>
+        <p><label for="id_username" id="bado">Username:</label> {{form.email_change_requested}}</p>
+        <p><label for="id_username" id="bella">Username:</label> {{form.email_change_approved}}</p>
+        <!-- <p><label for="id_first_name">First Name:</label>{{form.first_name}}</p>
+        <p><label for="id_last_name">Last Name:</label>{{form.last_name}}</p> -->
+        <input class="button btn-dark squared" type="submit" value="update" id="clickMe">
+    </form>
+    <form action="{% url 'user_list' %}" method="post">{% csrf_token %}
+        <input class="button btn-dark squared" type="submit" value="Change email" id="clickMe">
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script>
+        var oga = document.querySelector('#clickMe');
+        var check1 = document.getElementById("id_email_change_requested");
+        var check2 = document.getElementById("bella");
+        if  (check1.checked){console.log(true)}
+        else check1.checked = true;
+
+                // Uncheck
+        check2.value = false;
+        
+            //work with checkboxes[i]
+        // oga.addEventListener("click", function(e) {
+        //     e.preventDefault()
+        //         // disguise.value = real_value.value;
+        //         // Check
+            
+        //     console.log(check1.value)
+        //         // e.target.previousElementSibling.value = e.target.value
+        //         // console.log(e.target.previousElementSibling.value);
+        // })
+         
+    </script>
+{% endblock js %}

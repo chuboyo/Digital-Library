@@ -1,0 +1,42 @@
+{% extends "base3.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+
+{% block content %}
+<!-- <h1>{% trans "Account Inactive" %}</h1>
+
+<p>{% trans "This account is inactive." %}</p> -->
+<div class="row mb-4">
+    <div class="col-md-12 align-self-end">
+        <img src="{% static 'images/active-user.png' %}" alt="hugenerd" width="64" height="64" class="verificationDoneBody mb-3">
+        <h4>One final step...</h4>
+        <p class="resetDoneP">Your account is now ready for use. An admin will grant you access to use the system 
+            as soon as you are confirmed as a staff member. You will be notified via email when this check is 
+            complete.
+        </p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4 align-self-end">  
+    </div>
+    <div class="col-md-4 align-self-end">
+    </div>
+    <div class="col-md-4 align-self-end">
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 align-self-end">  
+    </div>
+    <div class="col-md-4 align-self-end">
+        <a href="{% url 'account_login' %}">Back to Login</a>
+    </div>
+    <div class="col-md-4 align-self-end">
+    </div>
+</div>
+{% endblock %}

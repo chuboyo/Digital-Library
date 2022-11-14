@@ -1,0 +1,42 @@
+{% extends "base3.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block head_title %}{% trans "Sign Out" %}{% endblock %}
+
+{% block content %}
+<!-- <h1>{% trans "Sign Out" %}</h1> -->
+
+<div class="row mb-2">
+  <div class="col-md-12 align-self-end">
+      <img src="{% static 'images/password-rest.png' %}" alt="hugenerd" width="64" height="64" class="verificationDoneBody mb-3">
+      <h4>Sign Out?</h4>
+      <p>{% trans 'Are you sure you want to sign out?' %}</p>
+  </div>
+</div>
+
+
+
+<form method="post" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <div class="row mb-4">
+      <div class="col-md-4 align-self-end">  
+      </div>
+      <div class="col-md-4 align-self-end">
+          <div class="d-grid gap-2">
+              <button class="btn btn-success" type="submit" id="loginButton">{% trans 'Sign Out' %}</button>
+          </div>
+      </div>
+      <div class="col-md-4 align-self-end">
+      </div>
+  </div>
+  <!-- <button type="submit">{% trans 'Sign Out' %}</button> -->
+</form>
+
+
+{% endblock %}
