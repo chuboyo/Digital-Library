@@ -216,8 +216,8 @@ ACCOUNT_FORMS = {
 
 # django autologout config
 AUTO_LOGOUT = {
-    'IDLE_TIME': 60,  # 10 seconds
-    'SESSION_TIME': 3600,  # 2 minutes
+    'IDLE_TIME': 300,  # 5 minutes
+    # 'SESSION_TIME': 3600,  # 1 hour
     'MESSAGE': 'The session has expired. Please login again to continue.',
     'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
 }
