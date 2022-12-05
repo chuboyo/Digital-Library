@@ -1,6 +1,8 @@
-{% extends "base3.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
+
+{% load static %}
 
 {% block head_title %}{% trans "Edit User View" %}{% endblock %}
 
@@ -12,41 +14,338 @@
         {{ form.as_p }}
         <button class="" type="submit">{% trans "submit" %}</button>
     </form> -->
-    <form class="width-50 py-4" action="" method="post">{% csrf_token %}
-        <p><label for="id_email">Email Address:</label> {{form.profile_picture}}</p>
-        <p><label for="id_email">Email Address:</label> {{form.email}}</p>
-        <p><label for="id_username" id="bado">Username:</label> {{form.email_change_requested}}</p>
-        <p><label for="id_username" id="bella">Username:</label> {{form.email_change_approved}}</p>
-        <!-- <p><label for="id_first_name">First Name:</label>{{form.first_name}}</p>
-        <p><label for="id_last_name">Last Name:</label>{{form.last_name}}</p> -->
+    <!-- <form class="width-50 py-4" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <p><label for="id_email">photo:</label> {{form.profile_picture}}</p>
+        {% if user.email_change_approved %}
+            <p><label for="id_email">Email Address:</label> {{form.email}}</p>
+        {% else %}
+            <input class="form-control" type="text" placeholder="Disabled input" aria-label="Disabled input example" disabled>
+        {% endif %}
+        
+        <p><label for="id_username" id="bado">FIRSTname:</label> {{form.first_name}}</p>
+        <p><label for="id_username" id="bella">LASTname:</label> {{form.last_name}}</p>
+        <p><label for="id_username" id="bella">Username:</label> {{form.username}}</p>
         <input class="button btn-dark squared" type="submit" value="update" id="clickMe">
     </form>
-    <form action="{% url 'user_list' %}" method="post">{% csrf_token %}
-        <input class="button btn-dark squared" type="submit" value="Change email" id="clickMe">
+    <input class="button btn-dark squared deletePicture" type="submit" value="delete_picture" id="clickMe">
+    <input class="button btn-dark squared changeEmail" type="submit" value="request_email_change" id="clickMe"> -->
+
+    <nav class="nav">
+        <div class="container text-center">
+            <div class="row" id="navrow">
+                <div class="col-sm-10">
+                    <ul class="nav justify-content-start">
+                        <li class="nav-item">
+                            <button type="button" id="sidebarCollapse" class="btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                </svg>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- <div class="col-sm-5">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <form action="{% url 'user_search_list' %}" method="get">
+                                <input class="form-control" list="datalistOptions" id="navinput" placeholder="Search username" name="userSearch">
+                            </form>
+                        </li>
+                    </ul>
+                </div> -->
+                <div class="col-sm-2">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#"><img src="{% static 'images/bell-icon.png' %}" alt=""></a>
+                        </li>
+                        <li class="nav-item">
+                            {% if request.user.profile_picture %}
+                              <a class="nav-link" href="{% url 'user_edit' request.user.id %}"><img src="{{ request.user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                              </svg></a>
+                            {% else %}
+                              <a class="nav-link" href="{% url 'user_edit' request.user.id %}"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                              </svg></a>
+                            {% endif %}  
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container text-start pt-2" id="tableBody">
+            <div class="row" id="tableRow">
+              <div class="col-lg-2">
+                <h4>Edit Profile</h4>
+              </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row pt-2">
+                <div class="col-lg-5">
+                    <div class="row" id="tableRow">
+                        <p>Profile picture</p>
+                    </div>
+                    <div class="row" id="">
+                        <p>Please upload a valid image file. Not more than 2MB in size</p>
+                    </div>
+                </div>
+                <div class="col-lg-1" id="">
+    
+                </div>
+                <div class="col-lg-6" id="pictureCard">
+                    <div class="row pb-4">
+                        <div class="col-1">
+    
+                        </div>
+                        <div class="col-4">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="hugenerd" width="146" height="146" class="rounded-circle" id="pictureCardImg">
+                            {% else %}
+                                <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="146" height="146" class="rounded-circle" id="pictureCardImg">
+                            {% endif %}
+                        </div>   
+                    </div>
+                    <div class="row pb-4">
+                        <div class="col-1">
+    
+                        </div>
+                        <div class="col-5 pb-4">
+                            <label for="file" id="fileLabel">Upload picture</label> {{form.profile_picture}}
+                            <!-- <p><label for="id_username" id="bella">Username:</label> {{form.username}}</p> -->
+                        </div>
+                    </div>   
+                    <div class="row pt-2">
+                        <div class="col-1">
+    
+                        </div>
+                        <div class="col-5">
+                            <!-- <input class="button btn-dark squared deletePicture" type="submit" value="delete_picture" id="deletePic"> -->
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success deletePicture" type="submit" id="deletePic">Delete picture</button>
+                            </div>
+                            <!-- <p><label for="id_username" id="bella">Username:</label> {{form.username}}</p> -->
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="row" id="tableRow">
+                        {% if user.is_custom_admin %}
+                            <p>Personal Information&nbsp;&nbsp;<span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">ADMIN</span></p>
+                        {% else %}
+                            <p>Personal Information&nbsp;&nbsp;<span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">{{user.user_role}}</span></p>
+                        {% endif %}    
+                    </div>
+                    <div class="row" id="">
+                        <p>Please provide accurate details</p>
+                    </div>
+                </div>
+                <div class="col-lg-1" id="">
+    
+                </div>
+                <div class="col-lg-6" id="">
+                    <div class="container text-start mb-2">
+                        <div class="row mb-4">
+
+                        </div>
+                        <div class="row pt-4">
+                          <div class="col-lg-5">
+                            <div class="mb-4">
+                              <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">First Name</label>
+                              <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                              {{ form.first_name }}
+                            </div>
+                          </div>
+                          <div class="col-lg-5">
+                            <div class="mb-4">
+                              <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Surname</label>
+                              <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                              {{ form.last_name }}
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="container text-start mb-2">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="mb-2">
+                                    <!-- {{ form.email }} -->
+                                
+                                    <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">User ID&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-lock" viewBox="0 0 16 16">
+                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+                                    </svg></label>
+                                    <input class="form-control" type="text" placeholder="{{user.id}}" aria-label="Disabled input example" disabled>
+                            
+                              
+                              <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                              
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="mb-2">
+                                <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Username</label>
+                                <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                                {{ form.username }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container text-start mb-2">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <div class="mb-2">
+                                    {% if user.email_change_approved %}
+                                        <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Email address</label>
+                                        {{ form.email }}
+                                    {% else %}
+                                        <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Email address&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-lock" viewBox="0 0 16 16">
+                                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+                                        </svg></label>
+                                        <input class="form-control" type="text" placeholder="{{user.email}}" aria-label="Disabled input example" disabled>
+                                    {% endif %}
+                                  
+                                  <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                                  
+                                </div>
+                            </div>
+                            <!-- <div class="col-lg-5">
+                                <div class="mb-2">
+                                <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Username</label>
+                                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ user.username }}">
+                                {{ form.username }}
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="container text-end mb-2">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="mb-2">
+                                  
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="mb-2">
+                                
+                                <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                                <a class="changeEmail" href="#">Change email address</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container text-end mb-4">
+                        <div class="row pb-4">
+                            <div class="col-lg-5">
+                                <div class="mb-2">
+                                  
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="mb-2">
+                                
+                                <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                                <a href="{% url 'account_change_password' %}">Change password</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container text-start mt-4">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="mb-2">
+                                  
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="mb-2">
+                                
+                                <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+                                <a href="#">Reset changes</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-2">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success" type="submit" value="update" id="loginButton">Save Changes</button>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <input class="button btn-dark squared" type="submit" value="update" id="clickMe"> -->
+        <!-- <input class="button btn-dark squared deletePicture" type="submit" value="delete_picture" id="clickMe"> -->
     </form>
+    
+
 {% endblock %}
 
 {% block js %}
     <script>
-        var oga = document.querySelector('#clickMe');
-        var check1 = document.getElementById("id_email_change_requested");
-        var check2 = document.getElementById("bella");
-        if  (check1.checked){console.log(true)}
-        else check1.checked = true;
+        $(document).ready(function() {
+            // send request to delete picture on click of "delete" button
+            $(".deletePicture").on("click", function() {
+                $.ajax({
+                    url: "{% url 'delete_picture' user.id %}",
+                    data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                    // show some message according to the response. 
+                    // For eg. A message box showing that the status has been changed
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    window.location.reload();
+                })
+            })
 
-                // Uncheck
-        check2.value = false;
-        
-            //work with checkboxes[i]
-        // oga.addEventListener("click", function(e) {
-        //     e.preventDefault()
-        //         // disguise.value = real_value.value;
-        //         // Check
-            
-        //     console.log(check1.value)
-        //         // e.target.previousElementSibling.value = e.target.value
-        //         // console.log(e.target.previousElementSibling.value);
-        // })
+            // send request to approve email change requests on click of "request_email_change" button
+            $(".changeEmail").on("click", function() {
+                $.ajax({
+                    url: "{% url 'request_email_change' user.id %}",
+                    data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                    // show some message according to the response. 
+                    // For eg. A message box showing that the status has been changed
+                })
+                .always(function() {
+                    console.log('[Done]');
+                })
+            })
+
+            $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+            });
+        });
          
     </script>
 {% endblock js %}

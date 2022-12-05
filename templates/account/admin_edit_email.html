@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block head_title %}{% trans "Admin Edit View" %}{% endblock %}
+
+{% block content %}
+        <!-- <form class="width-50 py-4" action="" method="post">{% csrf_token %}
+            <p><label for="" id="">email:</label> {{form.email_change_approved}}</p>
+            <input class="button btn-dark squared" type="submit" value="update" id="clickMe">
+        </form> -->
+        <nav class="nav">
+            <div class="container text-center">
+                <div class="row" id="navrow">
+                    <div class="col-sm-10">
+                        <ul class="nav justify-content-start">
+                            <li class="nav-item">
+                                <button type="button" id="sidebarCollapse" class="btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                    </svg>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- <div class="col-sm-5">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <form action="{% url 'user_search_list' %}" method="get">
+                                    <input class="form-control" list="datalistOptions" id="navinput" placeholder="Search username" name="userSearch">
+                                </form>
+                            </li>
+                        </ul>
+                    </div> -->
+                    <div class="col-sm-2">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#"><img src="{% static 'images/bell-icon.png' %}" alt=""></a>
+                            </li>
+                            <li class="nav-item">
+                                {% if request.user.profile_picture %}
+                                  <a class="nav-link" href="{% url 'user_edit' request.user.id %}"><img src="{{ request.user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                  </svg></a>
+                                {% else %}
+                                  <a class="nav-link" href="{% url 'user_edit' request.user.id %}"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                  </svg></a>
+                                {% endif %}  
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- <form method="post" enctype="multipart/form-data">
+            {% csrf_token %} -->
+            <div class="container text-start mb-4" id="">
+                <div class="row" id="tableRow">
+                  <div class="col-lg-2">
+                    <h4>Profile</h4>
+                  </div>
+                </div>
+            </div>
+
+            <div class="container text-start pt-4 pb-2" id="">
+                <div class="row" id="tableRow">
+                  <div class="col-lg-3">
+                    <div class="row">
+                        <div class="col-6">
+                            {% if user.profile_picture %}
+                                <img src="{{user.profile_picture.url}}" alt="hugenerd" width="146" height="146" class="rounded-circle">
+                            {% else %}
+                                <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="146" height="146" class="rounded-circle">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-2"></div>
+                        <div class="col-10">
+                            {% if user.is_custom_admin %}
+                                <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">ADMIN</span>
+                            {% else %}
+                                <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">{{user.user_role}}</span>
+                            {% endif %} 
+                        </div>
+                    </div>   
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Username</label>
+                            <h5>{{ user.username }}</h5>
+                        </div>
+                        <div class="col-6">
+                            <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Email address</label>
+                            <h5>{{ user.email }}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">First name</label>
+                            <h5>{{ user.first_name }}</h5>
+                        </div>
+                        <div class="col-6">
+                            <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Last name</label>
+                            <h5>{{ user.last_name }}</h5>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-5">
+                  </div>
+                </div>
+            </div>
+            <form class="" action="" method="post">{% csrf_token %}
+                <div class="container text-start mt-4" id="">
+                    <div class="row" id="">
+                      <div class="col-lg-5" id="updateFormCard2">
+                        <div class="row px-2 pt-4">
+                            <h5>New user registration</h5>
+                        </div>
+                        <div class="row px-2">
+                            <p>This user is requesting an email change</p>
+                        </div>
+                        <div class="row px-2">
+                            <div class="col-12">
+                                <p>{{form.email_change_approved}} Check to approve email change</p>
+                            </div>
+                        </div>
+                        <div class="row px-2">
+                            <div class="col-4">
+                                <div class="d-grid gap-2">
+                                    <a class="btn btn-success" href="{% url 'email_list' %}" id="deletePic">Deny user</a>
+                                </div>
+                            </div>
+                            
+                            <div class="col-4">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success" type="submit" id="loginButton">Allow user</button>
+                                  </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </form>
+{% endblock %}

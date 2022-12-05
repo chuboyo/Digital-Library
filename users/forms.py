@@ -32,42 +32,49 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserChangeForm(UserChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # for _, field in self.fields.items():
-        #     field.widget.attrs.update({'class': 'form-control'})
-        # self.fields['profile_picture'].widget.attrs.update({
-        #     'class': 'form-control',
-        # })
-        # self.fields['email'].widget.attrs.update({
-        #     'class': 'form-control',
-        # })
+        self.fields['profile_picture'].widget.attrs.update({
+            'type': 'file', 'id': 'file'})
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control', 'id': 'exampleFormControlInput1' , 'placeholder' : "",})
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control', 'id': 'exampleFormControlInput1' , 'placeholder' : "",})
+        self.fields['first_name'].widget.attrs.update({
+            'class': 'form-control', 'id' : 'exampleFormControlInput1',})
+        self.fields['last_name'].widget.attrs.update({
+            'class': 'form-control', 'id': 'exampleFormControlInput1' , 'placeholder' : "",})
+        
 
     class Meta:
         model = get_user_model()
-        fields = ('email_change_requested',)
+        fields = ('profile_picture','first_name', 'last_name', 'username', 'email',)
 
-# Expose model fields for 'CustomEmailChangeForm' and apply custom css styles
-class CustomEmailChangeForm(UserChangeForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # for _, field in self.fields.items():
-        #     field.widget.attrs.update({'class': 'form-control'})
-        # self.fields['profile_picture'].widget.attrs.update({
-        #     'class': 'form-control',
-        # })
-        # self.fields['email'].widget.attrs.update({
-        #     'class': 'form-control',
-        # })
 
-    class Meta:
-        model = get_user_model()
-        fields = ('email_change_requested',)
 
 
 # Expose model fields for 'CustomAdminChangeForm'
 class CustomAdminChangeForm(UserChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user_role'].widget.attrs.update({'class': 'form-select', 'id': 'modifiedFormSelect' })
+        self.fields['is_active'].widget.attrs.update({
+            'class': 'form-check-input', 'id' : 'flexCheckDefault', 'type': 'checkbox',
+        })
+
     class Meta:
         model = get_user_model()
-        fields = ('is_active', 'user_role', 'email_change_approved',)
+        fields = ( 'is_active', 'user_role',)
+
+# Expose model fields for 'CustomAdminEmailChangeForm'
+class CustomAdminEmailChangeForm(UserChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email_change_approved'].widget.attrs.update({
+            'class': 'form-check-input', 'id' : 'flexCheckDefault', 'type': 'checkbox',
+        })
+
+    class Meta:
+        model = get_user_model()
+        fields = ( 'email_change_approved',)
 
 # Apply custom css styles for 'CustomLoginForm'
 class CustomLoginForm(LoginForm):
@@ -80,7 +87,7 @@ class CustomLoginForm(LoginForm):
             'class': 'form-control', 'id': 'exampleFormControlInput1' , 'placeholder' : "",
         })
         self.fields['remember'].widget.attrs.update({
-            'class': 'form-check-input', 'id' : 'flexCheckDefault',
+            'class': 'form-check-input', 'id' : 'flexCheckDefault', 'type': 'checkbox',
         })
 
 # Apply custom css styles for 'CustomResetPasswordForm'

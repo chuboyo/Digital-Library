@@ -4,17 +4,19 @@
 
 {% load static %}
 
-{% block head_title %}{% trans "Reg List View" %}{% endblock %}
+{% block head_title %}{% trans "Email Change List View" %}{% endblock %}
 
 {% block content %}
     <!-- <h1>{% trans "Reg List is Under Construction" %}</h1>
-    {% for user in reg_list %}
-        <a href="{% url 'admin_edit' user.id %}">{{ user.username}}</a>
+    {% for user in email_list %}
+        {% if user.email_change_requested %}
+            <a href="{% url 'admin_edit_email' user.id %}">{{ user.username}}</a>
+        {% endif %}
     {% endfor %} -->
     <nav class="nav">
         <div class="container text-center">
             <div class="row" id="navrow">
-                <div class="col-sm-5">
+                <div class="col-sm-10">
                     <ul class="nav justify-content-start">
                         <li class="nav-item">
                             <button type="button" id="sidebarCollapse" class="btn">
@@ -25,7 +27,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-5">
+                <!-- <div class="col-sm-5">
                     <ul class="nav">
                         <li class="nav-item">
                             <form action="{% url 'reg_search_list' %}" method="get">
@@ -33,7 +35,7 @@
                             </form>
                         </li>
                     </ul>
-                </div>
+                </div> -->
                 <div class="col-sm-2">
                     <ul class="nav">
                         <li class="nav-item">
@@ -59,7 +61,7 @@
 <div class="container text-start" id="behave">
     <div class="row">
         <div class="col-12">
-            <h4>Registration</h4>
+            <h4>Email Change Requests</h4>
         </div>
     </div>
 </div>
@@ -67,7 +69,7 @@
 <div class="container text-start mb-4">
     <div class="row">
         <div class="col-lg-8">
-            <p>Manage registered users on the digital library platform</p>
+            <p>Manage email change requests on the digital library platform</p>
         </div>
         <div class="col-lg-2">
             <select class="form-select" aria-label="Default select example" id="userListDropdown">
@@ -106,42 +108,40 @@
     </div>
 </div>
 
-{% for user in reg_list %}
-<div class="container text-start pt-2" id="tableBody">
-    <div class="row" id="tableRow">
+{% for user in email_list %}
+    {% if user.email_change_requested %}
+    <div class="container text-start pt-2" id="tableBody">
+        <div class="row" id="tableRow">
 
-        <div class="col-lg-2">
-            {% if user.profile_picture %}
-            <p id="nameLabel"><img src="{{ user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
-            {% else %}
-            <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
-            {% endif %}
-        </div>
-        <div class="col-lg-2">
-            <p>{{  user.username }}</p>
-        </div>
-        <div class="col-lg-3">
-            <p>{{user.email}}</p>
-        </div>
-        <div class="col-lg-2">
-            <p>{{ user.date }}</p>
-        </div>
+            <div class="col-lg-2">
+                {% if user.profile_picture %}
+                <p id="nameLabel"><img src="{{ user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
+                {% else %}
+                <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
+                {% endif %}
+            </div>
+            <div class="col-lg-2">
+                <p>{{  user.username }}</p>
+            </div>
+            <div class="col-lg-3">
+                <p>{{user.email}}</p>
+            </div>
+            <div class="col-lg-2">
+                <p>{{ user.date }}</p>
+            </div>
 
-        <div class="col-lg-3 text-start">
-            {% if user.is_active %}
-            <p id="actionLabel"><a href="{% url 'admin_edit' user.id %}">Deactivate</a></p>
-            {% else %}
-            <p id="actionLabel"><a href="{% url 'admin_edit' user.id %}">Activate</a></p>
-            {% endif %}
-        </div>
+            <div class="col-lg-3 text-start">
+                <p id="actionLabel"><a href="{% url 'admin_edit_email' user.id %}">Approve</a></p>
+            </div>
 
 
-        <!-- <div class="col-lg-1">
-            <p id="actionLabel"><a class="" href="{% url 'user_delete' user.pk %}">Delete</a></p>
-            <button class="btn btn-success" type="submit" id="loginButton">Register</button>
-        </div> -->
+            <!-- <div class="col-lg-1">
+                <p id="actionLabel"><a class="" href="{% url 'user_delete' user.pk %}">Delete</a></p>
+                <button class="btn btn-success" type="submit" id="loginButton">Register</button>
+            </div> -->
+        </div>
     </div>
-</div>
+    {% endif %}
 {% endfor %}
 
 

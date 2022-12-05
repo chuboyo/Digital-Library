@@ -201,6 +201,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
+
 ACCOUNT_ADAPTER = 'users.adapters.ModifiedAccountAdapter'
 
 DEFAULT_FROM_EMAIL = 'akojichubiyojo1997@gmail.com'

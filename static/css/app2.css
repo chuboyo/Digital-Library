@@ -129,7 +129,7 @@ img {
 }
 
 #flexCheckDefault:checked{
-    background: #148D4B;
+    background-color: #148D4B;
     box-shadow:none;
     border-color: #148D4B;
 }

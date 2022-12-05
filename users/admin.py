@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 # expose model fields from 'CustomUser' model to display in admin
 class customUserAdmin(UserAdmin):
     model = get_user_model()
-    list_display = ['email', 'username', 'is_active','email_change_requested']
+    list_display = ['email', 'username', 'is_active','is_custom_admin', 'user_role']
 
 # Register models in django admin
 admin.site.register(get_user_model(), customUserAdmin)
