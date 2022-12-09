@@ -20,14 +20,22 @@ To run code from this repository
     my_user.save()
     exit()
 
-6. Start up local server - docker-compose up
+6. Set "is_custom_admin" status of superuser to "True" and login with superuser. 
+    docker-compose run --rm app sh -c "python manage.py shell"
+    from users.models import CustomUser
+    my_user = CustomUser.objects.get(username='append_your_super_user_name_to_this_query')
+    my_user.is_custom_admin = True
+    my_user.save()
+    exit()
 
-7. Use super user to subsequently set registered accounts to active from django admin panel
+7. Start up local server - docker-compose up
+
+8. Use super user to subsequently set registered accounts to active from django admin panel
     127.0.0.1/admin
 
 
 
-8. url routes 
+9. url routes 
     signup - 127.0.0.1:8000/accounts/signup
     login - 127.0.0.1:8000/accounts/login
     logout - 127.0.0.1:8000/accounts/logout
