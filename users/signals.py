@@ -8,7 +8,7 @@ from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from django.core.mail import send_mail
 
-#This must be unnecessary by now. would comment out soon.
+#This sets "is_active" to True so dj_all_auth can send out account confirmation emails
 @receiver(user_signed_up)
 def user_signed_up_(request, user, **kwargs):
     user.is_active = True

@@ -30,6 +30,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # Set debug in environment variables and if not set use False as default
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
+
+
 ALLOWED_HOSTS = []
 
 # Get allowed hosts from environment variables

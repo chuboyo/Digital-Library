@@ -84,7 +84,7 @@ def delete_profile_picture(request, pk):
         return JsonResponse(data, status=400)
 
 
-# function to request email change on "request email change" button click
+# function to request email change on "request email change" link click
 def request_email_change(request, pk):
     if is_ajax(request=request) and request.method == 'POST':
         profile = get_user_model().objects.get(id=pk)
@@ -97,7 +97,31 @@ def request_email_change(request, pk):
         return JsonResponse(data, status=400)
 
 
+# function to deactivate user on "deactivate user" button click
+def deactivate_user(request, pk):
+    if is_ajax(request=request) and request.method == 'POST':
+        profile = get_user_model().objects.get(id=pk)
+        profile.is_active = False
+        profile.save()
+        data = {'status': 'success'}
+        return JsonResponse(data, status=200)
+    else:
+        data = {'status': 'error'}
+        return JsonResponse(data, status=400)
 
+
+# function to deny email change on "deny user" button click
+def deny_email_change(request, pk):
+    if is_ajax(request=request) and request.method == 'POST':
+        profile = get_user_model().objects.get(id=pk)
+        profile.email_change_approved = False
+        profile.email_change_requested = False
+        profile.save()
+        data = {'status': 'success'}
+        return JsonResponse(data, status=200)
+    else:
+        data = {'status': 'error'}
+        return JsonResponse(data, status=400)
 
 # view to display registered users
 class RegistrationListView(ListView):
@@ -225,8 +249,10 @@ class AdminUpdateView(View):
     def get(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
         user = get_object_or_404(self.model, pk=pk)
-        form = self.form_class()
+        form = self.form_class(self.request.GET, instance=self.request.user)
         return render(request, self.template_name, {'form': form, 'user': user})
+
+
 
 
 # view to enable admins grant permission to users to update their email

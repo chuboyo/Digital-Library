@@ -183,6 +183,10 @@ a.article:hover {
     border: none;
 }
 
+#recolorDropdown{
+    background-color: #FFF;
+}
+
 #content {
     width: 100%;
     padding: 20px;
@@ -341,6 +345,10 @@ a.article:hover {
     background-color: #148D4B;
     box-shadow:none;
     border-color: #148D4B;
+}
+
+#dropdownLink {
+    color: #7B898D;
 }
 /* ---------------------------------------------------
     MEDIAQUERIES

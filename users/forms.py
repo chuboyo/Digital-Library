@@ -1,9 +1,10 @@
 # import modules, classes and functions to build forms
-from django.contrib.auth import get_user_model #get current user model i.e customUser
+from django.contrib.auth import get_user_model , forms#get current user model i.e customUser
 
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm #get usercreation and userchangeforms
 
-from allauth.account.forms import LoginForm, ResetPasswordForm, ChangePasswordForm, ResetPasswordKeyForm
+from allauth.account.forms import LoginForm, ResetPasswordForm, ChangePasswordForm, ResetPasswordKeyForm, SignupForm
+
 
 # Expose model fields for 'CustomUserCreationForm' and apply custom css styles
 class CustomUserCreationForm(UserCreationForm):
@@ -24,6 +25,12 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['password2'].widget.attrs.update({
             'class': 'form-control', 'id' : 'exampleFormControlInput1', 'placeholder' : "",})
 
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if get_user_model().objects.filter(email=data).exists():
+            raise forms.ValidationError("This email has already been registered")
+        return data
+
     class Meta:
         model = get_user_model()
         fields = ('email', 'username', 'first_name', 'last_name',)
@@ -39,9 +46,9 @@ class CustomUserChangeForm(UserChangeForm):
         self.fields['username'].widget.attrs.update({
             'class': 'form-control', 'id': 'exampleFormControlInput1' , 'placeholder' : "",})
         self.fields['first_name'].widget.attrs.update({
-            'class': 'form-control', 'id' : 'exampleFormControlInput1',})
+            'class': 'form-control', 'id' : 'exampleFormControlInput1', 'required': 'required'})
         self.fields['last_name'].widget.attrs.update({
-            'class': 'form-control', 'id': 'exampleFormControlInput1' , 'placeholder' : "",})
+            'class': 'form-control', 'id': 'exampleFormControlInput1' , 'placeholder' : "", 'required': 'required'})
         
 
     class Meta:
@@ -59,10 +66,11 @@ class CustomAdminChangeForm(UserChangeForm):
         self.fields['is_active'].widget.attrs.update({
             'class': 'form-check-input', 'id' : 'flexCheckDefault', 'type': 'checkbox',
         })
+        # self.fields['is_active'].widget.attrs.update(checked='False')
 
     class Meta:
         model = get_user_model()
-        fields = ( 'is_active', 'user_role',)
+        fields = ( 'is_active', 'user_role')
 
 # Expose model fields for 'CustomAdminEmailChangeForm'
 class CustomAdminEmailChangeForm(UserChangeForm):

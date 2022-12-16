@@ -8,7 +8,7 @@ import uuid
 user_roles = [
     # ('is_custom_admin', 'Admin'),
     ('manager', 'Manager'),
-    ('content_manager', 'Content_Manager'),
+    ('content_manager', 'Content Manager'),
     ('contributor', 'Contributor'),
     ('commenter', 'Commenter'),
     ('viewer', 'Viewer'),
