@@ -335,6 +335,14 @@
 
 {% block js %}
     <script>
+        const imgInput = document.querySelector("#file")
+        const displayImg = document.querySelector("#pictureCardImg")
+        imgInput.addEventListener('change',
+            (e)=>{
+            const imgObject = e.target.files[0]
+            displayImg.src = URL.createObjectURL(imgObject)
+        })
+
         $(document).ready(function() {
             // send request to delete picture on click of "delete" button
             $(".deletePicture").on("click", function() {

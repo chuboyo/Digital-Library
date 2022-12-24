@@ -165,7 +165,7 @@
 
         <div class="col-lg-3 text-start">
             {% if user.is_active %}
-            <p id="actionLabel"><a href="{% url 'admin_edit' user.id %}">Deactivate</a></p>
+            <p id="actionLabel"><a href="{% url 'deactivate_user' user.id %}">Deactivate</a></p>
             {% else %}
             <p id="actionLabel"><a href="{% url 'admin_edit' user.id %}">Activate</a></p>
             {% endif %}

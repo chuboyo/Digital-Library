@@ -186,7 +186,7 @@
                         <div class="row px-2">
                             <div class="col-4">
                                 <div class="d-grid gap-2">
-                                    <a class="btn btn-success deactivateUser" href="{% url 'reg_list' %}" id="deletePic">Deactivate</a>
+                                    <a class="btn btn-success" href="{% url 'reg_list' %}" id="deletePic">Go back</a>
                                 </div>
                             </div>
                             
@@ -205,31 +205,6 @@
 {% block js %}
   <script>
     $(document).ready(function() {
-        // send request to change the is_custom_admin state on customSwitches toggle
-        $(".deactivateUser").on("click", function() {
-          // alert(e.target.id);
-        //   identifier = e.target.id;
-
-            $.ajax({
-                url: "{% url 'deactivate_user' user.id %}", 
-                data: {
-                  csrfmiddlewaretoken: "{{ csrf_token }}",
-                },
-                type: "POST",
-                dataType : "json",
-            })
-            
-            // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
-            .done(function(data) {
-                console.log(data);
-                // show some message according to the response. 
-                // For eg. A message box showing that the status has been changed
-            })
-            .always(function() {
-                console.log('[Done]');
-            })
-        })
-
         $('#sidebarCollapse').on('click', function () {
             $('#sidebar').toggleClass('active');
           });

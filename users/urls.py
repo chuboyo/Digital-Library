@@ -3,7 +3,7 @@ from django.urls import path
 
 from .views import (user_list_view, set_admin, user_search_results, delete_profile_picture, request_email_change,
 deactivate_user, deny_email_change,EmailChangeListView, RegistrationSearchListView, RegistrationListView, UserDetailView, 
-UserUpdateView, AdminUpdateView, AdminUpdateEmailView, UserDeleteView,)
+UserUpdateView, AdminUpdateView, AdminUpdateEmailView, UserDeleteView, UserDeactivateView)
 
 # urls to access templates for various user related pages
 urlpatterns = [
@@ -17,7 +17,8 @@ urlpatterns = [
     path('profile/<uuid:pk>/edit/', UserUpdateView.as_view(), name='user_edit'),
     path('profile/<uuid:pk>/edit/delete_profile_picture', delete_profile_picture, name='delete_picture'),
     path('profile/<uuid:pk>/admin_edit/', AdminUpdateView.as_view(), name='admin_edit'),
-    path('profile/<uuid:pk>/admin_edit/deactivate_user', deactivate_user, name='deactivate_user'),
+    path('profile/<uuid:pk>/admin_edit/deactivate_user', UserDeactivateView.as_view(), name='deactivate_user'),
+    path('profile/<uuid:pk>/admin_edit/deactivated_user', deactivate_user, name='deactivated_user'),
     path('profile/<uuid:pk>/edit/request_email_change', request_email_change, name='request_email_change'),
     path('profile/<uuid:pk>/admin_edit_email/', AdminUpdateEmailView.as_view(), name='admin_edit_email'),
     path('profile/<uuid:pk>/admin_edit_email/deny_email_change', deny_email_change, name='deny_email_change'),

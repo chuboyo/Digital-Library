@@ -9,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 
 from django.contrib.auth import get_user_model
 
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import DetailView, ListView, View, TemplateView
 
 from django.views.generic.edit import UpdateView, DeleteView
 
@@ -305,3 +305,26 @@ class UserDeleteView(DeleteView):
             return render(request, template_name='errors/404.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
+
+
+
+
+# view to enable admins deactivate users and deny them access to digital library
+class UserDeactivateView(View):
+    model = get_user_model()
+    template_name = 'account/deactivate_user.html'
+    
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('account_login')
+        elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
+            return render(request, template_name='errors/404.html', status=404)
+        else:
+            return super().dispatch(request, *args, **kwargs)
+
+
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs['pk']
+        user = get_object_or_404(self.model, pk=pk)
+        return render(request, self.template_name, {'user': user})
