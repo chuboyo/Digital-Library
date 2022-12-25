@@ -126,7 +126,7 @@
                             {% if user.is_custom_admin %}
                                 <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">ADMIN</span>
                             {% else %}
-                                <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">{{user.user_role}}</span>
+                                <span class="badge rounded-pill text-bg-success capsFirstLetter" id="pillButtonCustomInactive">{{user.user_role}}</span>
                             {% endif %} 
                         </div>
                         {% endif %}
@@ -146,11 +146,11 @@
                     <div class="row">
                         <div class="col-6">
                             <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">First name</label>
-                            <h5>{{ user.first_name }}</h5>
+                            <h5 class="capsFirstLetter">{{ user.first_name }}</h5>
                         </div>
                         <div class="col-6">
                             <label for="exampleFormControlInput1" class="form-label" id="editUserLabel">Last name</label>
-                            <h5>{{ user.last_name }}</h5>
+                            <h5 class="capsFirstLetter">{{ user.last_name }}</h5>
                         </div>
                     </div>
                   </div>

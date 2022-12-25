@@ -179,7 +179,7 @@
                         {% elif user.user_role == 'content_manager' %}
                             <p>Personal Information&nbsp;&nbsp;<span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">Content Manager</span></p>
                         {% else %}
-                            <p>Personal Information&nbsp;&nbsp;<span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">{{user.user_role}}</span></p>
+                            <p>Personal Information&nbsp;&nbsp;<span class="badge rounded-pill text-bg-success capsFirstLetter" id="pillButtonCustomInactive">{{user.user_role}}</span></p>
                         {% endif %}    
                     </div>
                     <div class="row" id="">

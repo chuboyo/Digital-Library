@@ -209,7 +209,9 @@ a.article:hover {
 
 #nameLabel{
     color: #232B2E !important;
+    text-transform: capitalize;
 }
+
 
 #actionLabel{
     color: #B44E3B !important;
@@ -350,6 +352,11 @@ a.article:hover {
 #dropdownLink {
     color: #7B898D;
 }
+
+.capsFirstLetter:first-letter {
+    text-transform: capitalize;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */

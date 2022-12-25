@@ -214,7 +214,7 @@ class UserUpdateView(View):
     def get(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
         user = get_object_or_404(self.model, pk=pk)
-        form = self.form_class()
+        form = self.form_class(instance=user)
         return render(request, self.template_name, {'form': form, 'user': user})
 
 

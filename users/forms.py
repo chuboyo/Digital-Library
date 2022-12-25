@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm #get user
 
 from allauth.account.forms import LoginForm, ResetPasswordForm, ChangePasswordForm, ResetPasswordKeyForm, SignupForm
 
+from django import forms
+
 
 # Expose model fields for 'CustomUserCreationForm' and apply custom css styles
 class CustomUserCreationForm(UserCreationForm):
@@ -37,6 +39,8 @@ class CustomUserCreationForm(UserCreationForm):
 
 # Expose model fields for 'CustomUserChangeForm' and apply custom css styles
 class CustomUserChangeForm(UserChangeForm):
+    profile_picture = forms.ImageField(required=False, widget=forms.FileInput)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['profile_picture'].widget.attrs.update({
