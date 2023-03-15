@@ -90,6 +90,16 @@ a:focus {
     border-color: #26BE73;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active,
+input:-internal-autofill-selected,
+input:-internal-autofill-previewed {
+    background-color: transparent  !important;
+    -webkit-box-shadow: 0 0 0 30px #E7F5EE  inset !important;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
