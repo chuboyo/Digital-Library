@@ -17,6 +17,8 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm, CustomAdminEmai
 
 from .models import CustomUser 
 
+from notification.models import Notification
+
 from django.contrib.auth.mixins import ( LoginRequiredMixin)
 
 from django.shortcuts import get_object_or_404
@@ -34,7 +36,7 @@ def user_list_view(request):
     if not request.user.is_authenticated:
         return redirect('account_login')
     elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-        return render(request, template_name='errors/404.html', status=404)
+        return render(request, template_name='filesystem/file_list.html', status=404)
     else:
         profiles = get_user_model().objects.all().order_by('first_name')
         context = {'profiles':profiles}
@@ -45,7 +47,7 @@ def user_search_results(request):
     if not request.user.is_authenticated:
         return redirect('account_login')
     elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-        return render(request, template_name='errors/404.html', status=404)
+        return render(request, template_name='filesystem/file_list.html', status=404)
     else:
         query = request.GET.get('userSearch')
         users = get_user_model().objects.filter(Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query))
@@ -88,8 +90,12 @@ def delete_profile_picture(request, pk):
 def request_email_change(request, pk):
     if is_ajax(request=request) and request.method == 'POST':
         profile = get_user_model().objects.get(id=pk)
+        admins = get_user_model().objects.filter(is_custom_admin=True)
         profile.email_change_requested = True
         profile.save()
+        # for admin in admins:
+        #     Notification.objects.create(notification_type=7, to_user=admin, from_user=profile)
+        Notification.objects.create(notification_type=7, from_user=profile)
         data = {'status': 'success'}
         return JsonResponse(data, status=200)
     else:
@@ -133,7 +139,7 @@ class RegistrationListView(ListView):
         if not request.user.is_authenticated:
             return redirect('account_login')
         elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-            return render(request, template_name='errors/404.html', status=404)
+            return render(request, template_name='filesystem/file_list.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -147,7 +153,7 @@ class RegistrationSearchListView(ListView):
         if not request.user.is_authenticated:
             return redirect('account_login')
         elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-            return render(request, template_name='errors/404.html', status=404)
+            return render(request, template_name='filesystem/file_list.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -166,7 +172,7 @@ class EmailChangeListView(ListView):
         if not request.user.is_authenticated:
             return redirect('account_login')
         elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-            return render(request, template_name='errors/404.html', status=404)
+            return render(request, template_name='filesystem/file_list.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -229,7 +235,7 @@ class AdminUpdateView(View):
         if not request.user.is_authenticated:
             return redirect('account_login')
         elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-            return render(request, template_name='errors/404.html', status=404)
+            return render(request, template_name='filesystem/file_list.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -241,10 +247,10 @@ class AdminUpdateView(View):
             if form.is_valid():
                 form.save()
                 # return redirect('user_detail', user.id)
-                return redirect('reg_list')
+                return redirect('user_list')
             else:
                 form = self.form_class()
-        return  redirect('reg_list')
+        return  redirect('user_list')
 
     def get(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
@@ -265,7 +271,7 @@ class AdminUpdateEmailView(View):
         if not request.user.is_authenticated:
             return redirect('account_login')
         elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-            return render(request, template_name='errors/404.html', status=404)
+            return render(request, template_name='filesystem/file_list.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -302,7 +308,7 @@ class UserDeleteView(DeleteView):
         if not request.user.is_authenticated:
             return redirect('account_login')
         elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-            return render(request, template_name='errors/404.html', status=404)
+            return render(request, template_name='filesystem/file_list.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -319,7 +325,7 @@ class UserDeactivateView(View):
         if not request.user.is_authenticated:
             return redirect('account_login')
         elif not (request.user.is_custom_admin or request.user.user_role == 'manager'):
-            return render(request, template_name='errors/404.html', status=404)
+            return render(request, template_name='filesystem/file_list.html', status=404)
         else:
             return super().dispatch(request, *args, **kwargs)
 

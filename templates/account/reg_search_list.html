@@ -4,6 +4,8 @@
 
 {% load static %}
 
+{% load custom_tags %}
+
 {% block head_title %}{% trans "Reg List View" %}{% endblock %}
 
 {% block content %}
@@ -37,8 +39,9 @@
                 <div class="col-sm-2">
                     <ul class="nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#"><img src="{% static 'images/bell-icon.png' %}" alt=""></a>
-                        </li>
+                            <!-- <a class="nav-link active" aria-current="page" href="#"><img src="{% static 'images/bell-icon.png' %}" alt=""></a> -->
+                            {% show_notifications %}
+                        </li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <li class="nav-item">
                             {% if request.user.profile_picture %}
                             <div class="dropdown">

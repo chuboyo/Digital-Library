@@ -1,0 +1,352 @@
+{% load static %}
+
+
+<!-- Button trigger modal
+<i class="bi bi-bell-fill position-relative" style="font-size: 2rem; color: green;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <span class="badge position-absolute top-0 
+    start-100 translate-middle rounded-pill 
+    bg-danger" style="font-size: 0.8rem;">
+        10
+        <span class="visually-hidden">New alerts</span>
+      </span>
+</i>
+  
+  Modal
+  <div class="modal fade navbar-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog navbar-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {% for notification in specific_notifications %}
+                {{notification.notification_type}}
+            {% endfor %}
+            {% for notification in general_notifications %}
+                {{notification.notification_type}}
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="dropdown">
+    <!-- <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Dropdown button
+    </button> -->
+    <i class="bi bi-bell-fill position-relative" style="font-size: 1.5rem; color: green;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      {% if admin_count and request_user.is_custom_admin or notification_count and not request_user.is_custom_admin %}
+       <h6><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {% if request_user.is_custom_admin %}
+            {{admin_count }} 
+          {% else %}
+            {{notification_count }} 
+          {% endif %}
+            <span class="visually-hidden">New alerts</span>
+          </span></h6>
+      {% endif %}
+  </i>
+    <ul class="dropdown-menu notification-dropdown">
+      <li class="" id="tableRow">&nbsp;&nbsp;&nbsp;&nbsp;Notifications<a class="topLink removeAll" href="" id="{{request_user.id}}">Mark All as Read&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+      {% if specific_notifications or general_announcements or admin_announcements or email_change_requests or new_user_registrations %}
+        {% for notification in specific_notifications %}
+          {% if notification.notification_type == 1 and notification.publicfile %}
+            <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+              <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a file <span class="greenText">{{notification.publicfile.filename}}</span> with you
+            </a>
+          </li>
+          {% elif notification.notification_type == 1 and notification.privatefile %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a file <span class="greenText">{{notification.privatefile.filename}}</span> with you
+            </a>
+          </li>
+          {% elif notification.notification_type == 2 and notification.publicfolder %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a folder <span class="greenText">{{notification.publicfolder.folder_name}}</span> with you
+            </a>
+          </li>
+          {% elif notification.notification_type == 2 and notification.privatefolder %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a folder <span class="greenText">{{notification.privatefolder.folder_name}}</span> with you
+            </a>
+          </li>
+          {% elif notification.notification_type == 3 and notification.publicfile %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_file_name}} </span>to <span class="greenText">{{notification.publicfile.filename}}</span>
+            </a>
+          </li>
+          {% elif notification.notification_type == 3 and notification.privatefile %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_file_name}} </span>to <span class="greenText">{{notification.privatefile.filename}}</span>
+            </a>
+          </li>
+          {% elif notification.notification_type == 4 and notification.publicfolder %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your folder <span class="greenText">{{notification.old_folder_name}} </span>to <span class="greenText">{{notification.publicfolder.folder_name}}</span>
+            </a>
+          </li>
+          {% elif notification.notification_type == 4 and notification.privatefolder %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{notification.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if notification.from_user.profile_picture %}
+              <img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+              {{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your folder <span class="greenText">{{notification.old_folder_name}} </span>to <span class="greenText">{{notification.privatefolder.folder_name}}</span>
+            </a>
+          </li>
+          {% endif %}
+        {% endfor %}
+        {% for announcement in general_announcements %}
+        <li><a class="dropdown-item tableRow2" href="#" id="{{announcement.id}}">
+          <i class="bi bi-x-lg"></i>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="steelblue" class="bi bi-exclamation-square-fill" viewBox="0 0 16 16">
+            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+          </svg>
+          Admin made an announcement "{{announcement.announcement.title}}" "{{announcement.announcement.message|truncatechars:20}}"
+          </a>
+        </li>
+        {% endfor %}
+        {% if request_user.is_custom_admin %}
+          {% for announcement in admin_announcements %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{announcement.id}}">
+            <i class="bi bi-x-lg"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="steelblue" class="bi bi-exclamation-square-fill" viewBox="0 0 16 16">
+              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            Admin made an announcement "{{announcement.announcement.title}}" "{{announcement.announcement.message|truncatechars:20}}"
+            </a>
+          </li>
+          {% endfor %}
+        {% endif %}
+        {% if request_user.is_custom_admin %}
+          {% for request in email_change_requests %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{request.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if request.from_user.profile_picture %}
+              <img src="{{ request.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+            {{request.from_user.first_name}} {{request.from_user.last_name}} requested to change email
+            &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary allowEmailChange" id="loginButton" value="{{request.from_user.id}}">Allow</button>
+            </a>
+          </li>
+          {% endfor %}
+        {% endif %}
+        {% if request_user.is_custom_admin %}
+          {% for user in new_user_registrations %}
+          <li><a class="dropdown-item tableRow2" href="#" id="{{user.id}}">
+            <i class="bi bi-x-lg"></i>
+              {% if user.from_user.profile_picture %}
+              <img src="{{ user.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% else %}
+              <img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+              {% endif %}
+            New user registration!{{user.from_user.first_name}} {{user.from_user.last_name}} is requesting access to the Digital Library
+            &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary activateUser" id="loginButton" value="{{user.from_user.id}}">Allow</button>
+            </a>
+          </li>
+          {% endfor %}
+        {% endif %}
+      {% else %}
+      <li><a class="dropdown-item tableRow2" href="#" id="">
+        <p class="text-center"><img src="{% static 'images/no_notification.png' %}" alt="...." width="30" height="30" class="rounded-circle"></p>
+        You have no new notifications right now 
+        </a>
+      </li>
+      {% endif %}
+      <li class="" id=""><a class="bottomLink" href="{% url 'all_notifications' %}">View all Notifications</a></li>
+    </ul>
+    
+    <!-- <div class="modal fade" id="modal" role="dialog">
+      <div class="modal-dialog modal-sm">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              ×
+            </button>
+            <h4 class="modal-title">GeeksforGeeks</h4>
+          </div>
+          <div class="modal-body">
+            <p>GeeksforGeeks - A computer science portal for geeks</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-default"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+  {% block js %}
+  <script>
+    
+    $(document).ready(function() {
+      let notification_id;
+      let user_id;
+      
+      // send ajax request to mark selected notification as read 
+      $(".tableRow2").on("click", function(e) {
+          notification_id = $(this).attr("id")
+
+
+                $.ajax({
+                    url:  "{% url 'mark_read' %}", 
+                    data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                        notification_id: notification_id,
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+                $(this).parent().remove()
+                e.stopPropagation();
+            })
+
+
+            // send ajax request to mark all notifications as read 
+            $(".removeAll").on("click", function(e) {
+              user_id = $(this).attr('id')
+
+                $.ajax({
+                    url:  "{% url 'mark_all_read' %}", 
+                    data: {
+                      csrfmiddlewaretoken: "{{ csrf_token }}",
+                      user_id: user_id
+                      },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    window.location.reload();
+                })
+
+            })
+
+
+            // send ajax request to allow email change
+            $(".allowEmailChange").on("click", function(e) {
+              user_id = $(this).val()
+
+                $.ajax({
+                    url:  "{% url 'allow_email_change' %}", 
+                    data: {
+                      csrfmiddlewaretoken: "{{ csrf_token }}",
+                      user_id: user_id
+                      },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+            })
+            
+            // send ajax request to activate user 
+            $(".activateUser").on("click", function(e) {
+              user_id = $(this).val()
+
+                $.ajax({
+                    url:  "{% url 'activate_user' %}", 
+                    data: {
+                      csrfmiddlewaretoken: "{{ csrf_token }}",
+                      user_id: user_id
+                      },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+            })
+
+
+           
+    });
+  </script>
+{% endblock js %}

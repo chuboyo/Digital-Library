@@ -50,4 +50,8 @@ arrow facing down on the top right corner of navbar.
     confirm email - 127.0.0.1:8000/accounts/confirm-email
     password reset - 127.0.0.1:8000/accounts/password/reset
     user list - 127.0.0.1:8000/accounts/profile
+
+12. Be sure to rebuild docker image with instructions from 2(note that base python image on Dockerfile has 
+been changed from alpine version to regular version to facilitate some third party packages), migrate all 
+apps with instructions from 3, create and set up super user with instructions from 4 - 8. Login and enjoy!
     

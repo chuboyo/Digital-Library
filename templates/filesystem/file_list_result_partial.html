@@ -1,0 +1,101 @@
+{% load static %}
+
+{% if users %}
+    {% for user in users %}
+        <div class="userModal">
+               
+               
+          
+            <!-- <input class="samplee" type="checkbox" value="{{ user.id}}" id="{{user.id}}">
+            <p>{{user}}</p>
+            <select class="form-select" aria-label="Default select example" id="userListDropdown">
+                <option selected>All</option>
+                <option>View</option>
+            </select>     
+            <button class="clickMe" value="{{ user.id}}" id="iconButton"><i class="bi bi-alexa"></i></button>  -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-7">
+                        {% if user.profile_picture %}
+                            <p id="nameLabel"><img src="{{ user.profile_picture.url }}" alt="x" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
+                        {% else %}
+                            <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="x" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-3">
+                        <select class="form-select modifiedFormSelect" aria-label="Default select example" id="modifiedFormSelect-{{user.id}}">
+                            <option>All</option>
+                            <option>View</option>
+                        </select>  
+                    </div>
+                    <div class="col-2">
+                        <button class="clickMe" value="{{ user.id}}" id="iconButton"><i class="bi bi-plus-circle" style="color: green;"></i></button>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+
+{% block js %}
+<script>
+     $(document).ready(function() {
+        // var checkboxValues = JSON.parse(localStorage.getItem('checkboxValues')) || {};
+        // var $checkboxes = $(".modal-replaceable :checkbox");
+        // console.log($checkboxes)
+
+        // $checkboxes.on("change", function(){
+        //     $checkboxes.each(function(){
+        //         checkboxValues[this.id] = this.checked;
+        //     });
+        //     console.log(checkboxValues)
+        //     localStorage.setItem("checkboxValues", JSON.stringify(checkboxValues));
+        //     $checkboxes.each(function(){
+        //         checkboxValues[this.id] = this.checked;
+        //     });
+        // });
+
+        // $.each(checkboxValues, function(key, value) {
+        //     $("#" + key).prop('checked', value);
+        //     $("#7680bdaa-a08c-4993-b9a6-7a8f025a9b4a").prop('checked', 'true');
+            
+        //     //   console.log($("#" + key).val())
+        //     console.log(localStorage.getItem('checkboxValues'))
+        //     // localStorage.clear();
+        // });
+
+        // // $("#removeChecked").on('click', function(){
+        // //     console.log('clicked')
+        // //     localStorage.removeItem('checkboxValues')
+        // // })
+    
+        // $('.clickMe').off().on('click', function () {
+        //     console.log("clicked")
+        //     var $duplicate = $(this).parent()
+        //     var $clone = $duplicate.clone().appendTo(".appendage")
+        //     $('.appendage :button').replaceWith('<button class="del" value="baddo">New</button>')
+            
+        //     console.log($('.del'))
+        //     // $(".appendage").appendTo($clone)
+        // })
+        // $('.del').on('click', function(){
+        //     console.log('appendage clicked')
+        //     $(this).parent().remove()
+        // })
+     })
+    //  $(document).off().delegate(".appendage :button", "click", function() {
+    //     console.log('appendage clicked')
+    //     var index = myCheckboxes4.indexOf();
+    //         $(this).parent().remove()
+    //  });
+    // $(document).off().delegate(".appendage .clickMe", "click", function() {
+    //     console.log('appendage clicked')
+    //     var index = myCheckboxes4.indexOf($(this).val());
+    //     delete myCheckboxes4[index]
+    //     console.log(myCheckboxes4)
+    //         $(this).parent().remove()
+    //  });
+</script>
+{% endblock js %}

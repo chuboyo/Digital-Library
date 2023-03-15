@@ -25,6 +25,12 @@ urlpatterns = [
     # User management
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('users.urls')),
+  
+    # filesystem
+    path('', include('filesystem.urls')),
+
+    # notification
+    path('notification/', include('notification.urls'))
 ]
 
 # Add static and media urls for local development

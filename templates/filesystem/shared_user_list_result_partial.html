@@ -1,0 +1,45 @@
+{% load static %}
+
+
+{% if sharedfile %}
+    {% for file in sharedfile %}
+        <div class="userModal2">
+               
+               
+          
+            <!-- <input class="samplee" type="checkbox" value="{{ user.id}}" id="{{user.id}}">
+            <p>{{user}}</p>
+            <select class="form-select" aria-label="Default select example" id="userListDropdown">
+                <option selected>All</option>
+                <option>View</option>
+            </select>     
+            <button class="clickMe" value="{{ user.id}}" id="iconButton"><i class="bi bi-alexa"></i></button>  -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-7">
+                        {% if file.user.profile_picture %}
+                            <p id="nameLabel"><img src="{{ file.user.profile_picture.url }}" alt="x" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{file.user.first_name}} {{file.user.last_name}}</p>
+                        {% else %}
+                            <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="x" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{file.user.first_name}} {{file.user.last_name}}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-3">
+                        <select class="form-select" aria-label="Default select example" id="modifiedFormSelect">
+                            <option {% if file.permission_field == "All" %}selected{% endif %}>All</option>
+                            <option {% if file.permission_field == 'View' %}selected{% endif %}>View</option>
+                        </select>  
+                    </div>
+                    <div class="col-2">
+                        <button class="clickMe" value="{{ file.user.id}}" id="iconButton"><i class="bi bi-x-circle" style="color: red;"></i></button>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% block js %}
+<script>
+   
+</script>
+{% endblock js %}

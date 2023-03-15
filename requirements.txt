@@ -4,3 +4,7 @@ django-allauth
 Pillow
 django-auto-logout
 pytz
+django-cleanup
+pylint-django
+plotly==5.6.0
+pandas==1.2.4

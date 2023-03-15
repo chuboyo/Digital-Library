@@ -1,12 +1,14 @@
 #  import modules, classes and functions to create signals 
 from allauth.account.signals import user_signed_up, email_confirmed
 from .models import CustomUser
+from notification.models import Notification
 from django.dispatch import receiver
 from .models import CustomUser
 from allauth.account.models import EmailAddress
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from django.core.mail import send_mail
+
 
 #This sets "is_active" to True so dj_all_auth can send out account confirmation emails
 @receiver(user_signed_up)
@@ -18,6 +20,10 @@ def user_signed_up_(request, user, **kwargs):
 @receiver(email_confirmed)
 def email_confirmed_(request, email_address, **kwargs):
     user = CustomUser.objects.get(email=email_address.email)
+    admins = CustomUser.objects.filter(is_custom_admin=True)
+    # for admin in admins:
+    #     Notification.objects.create(notification_type=8, to_user=admin, from_user=user)
+    Notification.objects.create(notification_type=8, from_user=user)
     user.is_active = False
     user.save()
 

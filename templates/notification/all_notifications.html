@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% load custom_tags %}
+
+{% block head_title %}{% trans "User List View" %}{% endblock %}
+
+{% block content %}
+ <nav class="nav">
+                <div class="container text-center">
+                    <div class="row" id="navrow">
+                        <div class="col-sm-5">
+                            <ul class="nav justify-content-start">
+                                <li class="nav-item">
+                                    <button type="button" id="sidebarCollapse" class="btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                        </svg>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-5">
+                           
+                        </div>
+                        <div class="col-sm-2">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <!-- <a class="nav-link active" aria-current="page" href="#"><img src="{% static 'images/bell-icon.png' %}" alt=""></a> -->
+                                    {% show_notifications %}
+                                </li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <li class="nav-item">
+                                    {% if request.user.profile_picture %}
+                                    <div class="dropdown">
+                                      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="recolorDropdown"><img src="{{ request.user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                      </svg></a>
+
+                                      <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'user_edit' request.user.id %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                          <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                          <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Change password</a></li>
+                                        <li><a class="dropdown-item" href="#" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_logout' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
+                                          <path d="M7.5 1v7h1V1h-1z"/>
+                                          <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                                      </svg>&nbsp;&nbsp;&nbsp;&nbsp;Logout</a></li>
+                                      </ul>
+                                    </div> 
+                                    {% else %}
+                                    <div class="dropdown">
+                                      <a class="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="recolorDropdown"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                      </svg></a>
+
+                                      <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'user_edit' request.user.id %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                          <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                          <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Change password</a></li>
+                                        <li><a class="dropdown-item" href="#" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_logout' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
+                                          <path d="M7.5 1v7h1V1h-1z"/>
+                                          <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Logout</a></li>
+                                      </ul>
+                                    </div>
+                                    {% endif %} 
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+<div class="container text-start" id="behave">
+    <div class="row">
+      <div class="col-10">
+        <h4>All Notifications</h4>
+      </div>
+      <div class="col-2">
+        <a href="" id="{{request_user.id}}"><span class="greenText removeAll" id="{{request_user.id}}">Mark All as Read</span></a>
+      </div>
+    </div>
+</div>
+
+
+
+
+<!-- <div class="container text-start pt-2" id="">
+    <div class="row tableRow2" id=""> -->
+        {% if specific_notifications or general_announcements or admin_announcements or email_change_requests or new_user_registrations %}
+            {% for notification in specific_notifications %}
+            <div class="container text-start pt-2 tableRow2" id="">
+                <div class="row" id="">
+                    {% if notification.notification_type == 1 and notification.publicfile %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a file <span class="greenText">{{notification.publicfile.filename}}</span> with you</p>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a file <span class="greenText">{{notification.publicfile.filename}}</span> with you</p>
+                        {% endif %}
+                    </div>
+                    {% elif notification.notification_type == 1 and notification.privatefile %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a file <span class="greenText">{{notification.privatefile.filename}}</span> with you</p>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a file <span class="greenText">{{notification.privatefile.filename}}</span> with you</p>
+                        {% endif %}
+                    </div>
+                    {% elif notification.notification_type == 2 and notification.publicfolder %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a folder <span class="greenText">{{notification.publicfolder.folder_name}}</span> with you</p>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a folder <span class="greenText">{{notification.publicfolder.folder_name}}</span> with you</p>
+                        {% endif %}
+                    </div>
+                    {% elif notification.notification_type == 2 and notification.privatefolder %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a folder <span class="greenText">{{notification.privatefolder.folder_name}}</span> with you</p>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} shared a folder <span class="greenText">{{notification.privatefolder.folder_name}}</span> with you</p>
+                        {% endif %}
+                    </div>
+                    {% elif notification.notification_type == 3 and notification.publicfile %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_file_name}} </span>to <span class="greenText">{{notification.publicfile.filename}}</span>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_file_name}} </span>to <span class="greenText">{{notification.publicfile.filename}}</span>
+                        {% endif %}
+                    </div>
+                    {% elif notification.notification_type == 3 and notification.privatefile %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_file_name}} </span>to <span class="greenText">{{notification.privatefile.filename}}</span>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_file_name}} </span>to <span class="greenText">{{notification.privatefile.filename}}</span>
+                        {% endif %}
+                    </div>
+                    {% elif notification.notification_type == 4 and notification.publicfolder %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your folder <span class="greenText">{{notification.old_folder_name}} </span>to <span class="greenText">{{notification.publicfolder.folder_name}}</span>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_folder_name}} </span>to <span class="greenText">{{notification.publicfolder.folder_name}}</span>
+                        {% endif %}
+                    </div>
+                    {% elif notification.notification_type == 4 and notification.privatefolder %}
+                    <div class="col-lg-12">
+                        {% if notification.from_user.profile_picture %}
+                        <p id="nameLabel2"><img src="{{ notification.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your folder <span class="greenText">{{notification.old_folder_name}} </span>to <span class="greenText">{{notification.privatefolder.folder_name}}</span>
+                        {% else %}
+                        <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{notification.from_user.first_name}} {{notification.from_user.last_name}} renamed your file <span class="greenText">{{notification.old_folder_name}} </span>to <span class="greenText">{{notification.privatefolder.folder_name}}</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            
+                    {% for announcement in general_announcements %}
+                    <div class="container text-start pt-2 tableRow2" id="">
+                        <div class="row" id="">
+                            <div class="col-lg-12">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="steelblue" class="bi bi-exclamation-square-fill" viewBox="0 0 16 16">
+                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </svg>
+                                Admin made an announcement "{{announcement.announcement.title}}" <p>"{{announcement.announcement.message}}"</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+               
+            {% if request_user.is_custom_admin %}
+            
+                    {% for announcement in admin_announcements %}
+                    <div class="container text-start pt-2 tableRow2" id="">
+                        <div class="row" id="">
+                            <div class="col-lg-12">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="steelblue" class="bi bi-exclamation-square-fill" viewBox="0 0 16 16">
+                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </svg>
+                                Admin made an announcement "{{announcement.announcement.title}}" <p>"{{announcement.announcement.message}}"</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+               
+            {% endif %}
+            {% if request_user.is_custom_admin %}
+            
+                    {% for request in email_change_requests %} 
+                    <div class="container text-start pt-2 tableRow2" id="">
+                        <div class="row" id="">
+                            <div class="col-lg-12">
+                                {% if request.from_user.profile_picture %}
+                                <p id="nameLabel2"><img src="{{ request.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{request.from_user.first_name}} {{request.from_user.last_name}} requested to change email
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'admin_edit_email' request.from_user.id %}">View profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary allowEmailChange" id="loginButton" value="{{request.from_user.id}}">Allow</button>
+                                {% else %}
+                                <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">{{request.from_user.first_name}} {{request.from_user.last_name}} requested to change email
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'admin_edit_email' request.from_user.id %}">View profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary allowEmailChange" id="loginButton" value="{{request.from_user.id}}">Allow</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                
+            {% endif %}
+            {% if request_user.is_custom_admin %}
+            
+                    {% for user in new_user_registrations %}
+                    <div class="container text-start pt-2 tableRow2" id="">
+                        <div class="row" id="">
+                            <div class="col-lg-12">
+                                {% if user.from_user.profile_picture %}
+                                <p id="nameLabel2"><img src="{{ user.from_user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle"> New user registration!{{user.from_user.first_name}} {{user.from_user.last_name}} is requesting access to the Digital Library
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'admin_edit' user.from_user.id %}">View profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary activateUser" id="loginButton" value="{{user.from_user.id}}">Allow</button>
+                                {% else %}
+                                <p id="nameLabel2"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle"> New user registration!{{user.from_user.first_name}} {{user.from_user.last_name}} is requesting access to the Digital Library
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'admin_edit' user.from_user.id %}">View profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary activateUser" id="loginButton" value="{{user.from_user.id}}">Allow</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+               
+            {% endif %}
+
+        {% endif %}
+
+
+
+{% endblock %}
+
+{% block js %}
+  <script>
+    $(document).ready(function() {
+        let user_id;
+
+        // send ajax request to mark all notifications as read 
+        $(".removeAll").on("click", function(e) {
+                user_id = $(this).attr('id')
+                console.log(user_id)
+
+                $.ajax({
+                    url:  "{% url 'mark_all_read' %}", 
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        user_id: user_id
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+        })
+
+
+        // send ajax request to allow email change
+        $(".allowEmailChange").on("click", function(e) {
+              user_id = $(this).val()
+              console.log(user_id)
+
+                $.ajax({
+                    url:  "{% url 'allow_email_change' %}", 
+                    data: {
+                      csrfmiddlewaretoken: "{{ csrf_token }}",
+                      user_id: user_id
+                      },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                    alert('successful')
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+        })
+
+        // send ajax request to activate registered user
+        $(".activateUser").on("click", function(e) {
+              user_id = $(this).val()
+
+                $.ajax({
+                    url:  "{% url 'activate_user' %}", 
+                    data: {
+                      csrfmiddlewaretoken: "{{ csrf_token }}",
+                      user_id: user_id
+                      },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                    alert('successful')
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+        })
+
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+          });
+    });
+  </script>
+{% endblock js %}

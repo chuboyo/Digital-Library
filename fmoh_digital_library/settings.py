@@ -57,9 +57,15 @@ INSTALLED_APPS = [
     #Third party applications
     'allauth',
     'allauth.account',
+    
 
     #local applications
     'users.apps.UsersConfig',
+    'filesystem.apps.FilesystemConfig',
+    'notification.apps.NotificationConfig',
+
+    #django cleanup
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -174,7 +180,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # django-allauth config
-# LOGIN_REDIRECT_URL = 'account_signup'
+LOGIN_REDIRECT_URL = 'file_list'
 LOGIN_URL = 'account_login'
 
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
