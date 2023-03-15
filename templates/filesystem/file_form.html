@@ -191,3 +191,46 @@
                   <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
                 </svg>&nbsp;&nbsp;&nbsp;&nbsp;Delete</a></li>
               </ul>
+
+              # if os.path.exists(file_instance.filename.path):
+              #     my_chars = token_hex(2)
+              #     file_root, file_ext = os.path.splitext(rename_input)
+              #     os.rename(file_instance.filename.path, settings.MEDIA_ROOT + '/' + file_root + my_chars + file_ext)
+              # else:
+              #    os.rename(file_instance.filename.path, settings.MEDIA_ROOT + '/' + rename_input)
+
+              # function to rename file with text input from request object
+def rename_file_view(request):
+    if is_ajax(request=request) and request.method=='POST':
+        file_id = request.POST.get('file_id')
+        print(file_id)
+        
+        rename_input = request.POST.get('rename_input')
+        print(rename_input)
+        try:
+            file_instance = PublicFiles.objects.get(id=file_id)
+            old_file_name = str(file_instance.filename)
+            if file_instance:
+                Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, publicfile=file_instance, old_file_name=old_file_name )
+        except:
+            file_instance = PrivateFiles.objects.get(id=file_id)
+            old_file_name = str(file_instance.filename)
+            if file_instance:
+                Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, privatefile=file_instance, old_file_name=old_file_name )
+        # os.rename(file_instance.filename.path, settings.MEDIA_ROOT + '/' + rename_input)
+        # file_instance.filename = rename_input
+        if os.path.exists(file_instance.filename.path):
+            my_chars = random.randint(0, 9)
+            print(my_chars)
+            file_root, file_ext = os.path.splitext(rename_input)
+            os.rename(file_instance.filename.path, settings.MEDIA_ROOT + '/' + file_root + '_' + str(my_chars) + file_ext)
+            file_instance.filename = file_root + '_' + str(my_chars) + file_ext
+        else:
+            os.rename(file_instance.filename.path, settings.MEDIA_ROOT + '/' + rename_input)
+            file_instance.filename = rename_input
+        file_instance.save()
+        data = {'status':'success'}
+        return JsonResponse(data, status=200)
+    else:
+        data = {'status':'error'}
+        return JsonResponse(data, status=400)

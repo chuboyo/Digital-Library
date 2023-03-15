@@ -145,11 +145,11 @@
                 <div class="modal-body">
                     
                     <p id="nameLabel">New folder</p>
-                    <form action="{% url 'folder_create' %}" id="folderCreateForm" method="post">{% csrf_token %}
+                    <form action="{% url 'private_folder_create' %}" id="folderCreateForm" method="post">{% csrf_token %}
                       <input class="form-control" list="datalistOptions" id="renameInput2" placeholder="" name="createFolder"> 
                     </form>
                      
-                    <p>This will create a new folder in 'Public folders'</p>  
+                    <p>This will create a new folder in 'Private folders'</p>  
           
                 </div>
                 <div class="modal-footer">
@@ -220,7 +220,7 @@
                     <div class="row" id="folderGridRow">
                         <div class="col-10">
                             <img src="{% static 'images/foldergrid.png' %}" alt="hugenerd" width="30" height="30" class="">
-                            <a href="{% url 'folder_detail_grid' folder.id %}">{{  folder.folder_name |truncatechars:8 }}
+                            <a href="{% url 'private_folder_detail_grid' folder.id %}">{{  folder.folder_name |truncatechars:8 }}
                             </a>
                         </div>
                         <div class="col-2">

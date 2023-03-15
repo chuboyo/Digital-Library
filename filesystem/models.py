@@ -25,7 +25,7 @@ announcement_groups = [
 # Class to create public folders
 class PublicFolders(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    folder_name = models.CharField(max_length=30)
+    folder_name = models.CharField(max_length=100)
     date = models.DateField(auto_now_add=True)
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     recycled = models.BooleanField(default=False)
@@ -82,7 +82,7 @@ class SharedFolders(models.Model):
 # Class to create private folders
 class PrivateFolders(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    folder_name = models.CharField(max_length=30)
+    folder_name = models.CharField(max_length=100)
     date = models.DateField(auto_now_add=True)
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     recycled = models.BooleanField(default=False)

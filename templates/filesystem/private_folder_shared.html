@@ -166,11 +166,11 @@
                 <div class="modal-body">
                     
                     <p id="nameLabel">New folder</p>
-                    <form action="{% url 'folder_create' %}" id="folderCreateForm" method="post">{% csrf_token %}
+                    <form action="{% url 'private_folder_create' %}" id="folderCreateForm" method="post">{% csrf_token %}
                       <input class="form-control" list="datalistOptions" id="renameInput2" placeholder="" name="createFolder"> 
                     </form>
                      
-                    <p>This will create a new folder in 'Public folders'</p>  
+                    <p>This will create a new folder in 'Private folders'</p>  
           
                 </div>
                 <div class="modal-footer">
@@ -237,7 +237,7 @@
 {% if folder_list %}
   {% for folder in folder_list %}
     {% if not folder.folder_name.recycled and folder.user == request.user %}
-        <div class="container text-start pt-2" id="tableBody>
+        <div class="container text-start pt-2" id="tableBody">
           <div class="row reStyle" id="tableRow">
               <div class="col-lg-1" id="testCheckbox">
                   <div class="form-check">

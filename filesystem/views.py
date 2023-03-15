@@ -16,6 +16,8 @@ from django.template.loader import render_to_string
 from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth.mixins import ( LoginRequiredMixin)
+from secrets import token_hex
+import random
 import os, json
 from itertools import chain
 import pandas as pd
@@ -33,7 +35,6 @@ def is_ajax(request):
 # function to display all users on shared list of a specific file
 def shared_with_view(request):
         file_id = request.GET.get("file_id")
-        print(file_id)
         if file_id:
             try:
                 file = PublicFiles.objects.get(id=file_id)
@@ -43,7 +44,6 @@ def shared_with_view(request):
                 fileshared = SharedPrivateFiles.objects.filter(filename=file)
         else:
             fileshared = None
-        print(fileshared)
         does_req_accept_json = request.accepts("application/json")
         is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest" and does_req_accept_json
         if is_ajax_request:
@@ -138,17 +138,24 @@ def rename_file_view(request):
     if is_ajax(request=request) and request.method=='POST':
         file_id = request.POST.get('file_id')
         rename_input = request.POST.get('rename_input')
+        file_root, file_ext = os.path.splitext(rename_input)
+        my_chars = token_hex(2)
+        rename_input = file_root + '_' + str(my_chars) + file_ext
         try:
             file_instance = PublicFiles.objects.get(id=file_id)
             old_file_name = str(file_instance.filename)
-            Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, publicfile=file_instance, old_file_name=old_file_name )
+            # Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, publicfile=file_instance, old_file_name=old_file_name )
         except:
             file_instance = PrivateFiles.objects.get(id=file_id)
             old_file_name = str(file_instance.filename)
-            Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, privatefile=file_instance, old_file_name=old_file_name )
+            # Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, privatefile=file_instance, old_file_name=old_file_name )
         os.rename(file_instance.filename.path, settings.MEDIA_ROOT + '/' + rename_input)
         file_instance.filename = rename_input
         file_instance.save()
+        try:
+            Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, publicfile=file_instance, old_file_name=old_file_name )
+        except:
+            Notification.objects.create(notification_type=3, to_user=file_instance.owner, from_user=request.user, privatefile=file_instance, old_file_name=old_file_name )
         data = {'status':'success'}
         return JsonResponse(data, status=200)
     else:
@@ -195,6 +202,7 @@ def file_search_view(request):
         else:
             query = request.GET.get('publicFilesSearch')
             file_list = PublicFiles.objects.filter(Q(filename__icontains=query))
+            # print(file_list)
             context = {'file_list': file_list}
             return render(request, 'filesystem/search_file_list.html' , context)
     
@@ -439,10 +447,14 @@ def folder_detail_view(request, pk):
         return redirect('account_login')
     else:
         folder = PublicFolders.objects.get(id=pk)
+        try:
+            shared_folder = SharedFolders.objects.get(Q(folder_name=folder) & Q(user=request.user))
+        except:
+            shared_folder = None
         associated_files = PublicFiles.objects.filter(folder=folder)
         form1 = PublicFilesMultipleCreateForm(initial={'owner': request.user})
         form2 = PublicFolderCreateForm(initial={'owner': request.user})
-        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder}
+        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder, 'shared_folder': shared_folder}
         return render(request, 'filesystem/folder_detail.html' , context)
 
 # function to upload multiple files to specific folder(GRID VIEW)
@@ -510,10 +522,14 @@ def folder_detail_grid_view(request, pk):
         return redirect('account_login')
     else:
         folder = PublicFolders.objects.get(id=pk)
+        try:
+            shared_folder = SharedFolders.objects.get(Q(folder_name=folder) & Q(user=request.user))
+        except:
+            shared_folder = None
         associated_files = PublicFiles.objects.filter(folder=folder)
         form1 = PublicFilesMultipleCreateForm(initial={'owner': request.user})
         form2 = PublicFolderCreateForm(initial={'owner': request.user})
-        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder}
+        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder, 'shared_folder': shared_folder}
         return render(request, 'filesystem/folder_detail_grid.html' , context)
 
 # function to search for specific file in shared files using filename as query
@@ -845,10 +861,14 @@ def private_folder_detail_view(request, pk):
         return redirect('account_login')
     else:
         folder = PrivateFolders.objects.get(id=pk)
+        try:
+            shared_folder = SharedPrivateFolders.objects.get(Q(folder_name=folder) & Q(user=request.user))
+        except:
+            shared_folder = None
         associated_files = PrivateFiles.objects.filter(folder=folder)
         form1 = PrivateFilesMultipleCreateForm(initial={'owner': request.user})
         form2 = PrivateFolderCreateForm(initial={'owner': request.user})
-        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder}
+        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder, 'shared_folder': shared_folder}
         return render(request, 'filesystem/private_folder_detail.html' , context)
 
 # function to upload multiple private files to specific folder(GRID VIEW)
@@ -916,10 +936,14 @@ def private_folder_detail_grid_view(request, pk):
         return redirect('account_login')
     else:
         folder = PrivateFolders.objects.get(id=pk)
+        try:
+            shared_folder = SharedPrivateFolders.objects.get(Q(folder_name=folder) & Q(user=request.user))
+        except:
+            shared_folder = None
         associated_files = PrivateFiles.objects.filter(folder=folder)
         form1 = PrivateFilesMultipleCreateForm(initial={'owner': request.user})
         form2 = PrivateFolderCreateForm(initial={'owner': request.user})
-        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder}
+        context = {'file_list': associated_files, 'form1': form1, 'form2': form2, 'folder': folder, 'shared_folder': shared_folder}
         return render(request, 'filesystem/private_folder_detail_grid.html' , context)
 
 
@@ -960,8 +984,8 @@ def show_statistics_view(request):
         
         totalfilesize = pubfilesize + privfilesize
         totalfolsize  = pubfolsize + privfolsize
-        totalfilesize = round(totalfilesize/1000000000, 0) 
-        totalfolsize = round(totalfolsize/1000000000, 0) 
+        totalfilesize = round(totalfilesize/1000000000, 1) 
+        totalfolsize = round(totalfolsize/1000000000, 1) 
         usersize = round(usersize/1000000000, 0)
         offset = (200 - totalfolsize - totalfilesize - usersize)
         usedspace = totalfilesize + totalfolsize + usersize
@@ -1162,7 +1186,6 @@ class PublicFileCreateView(CreateView):
     def get(self, request, *args, **kwargs):
         url_parameter = self.request.GET.get("q")
         file_id = self.request.GET.get("file_id")
-        print(file_id)
         if url_parameter:
             users = get_user_model().objects.filter(Q(username__icontains=url_parameter) | Q(first_name__icontains=url_parameter) | Q(last_name__icontains=url_parameter))
         else:
@@ -1173,7 +1196,6 @@ class PublicFileCreateView(CreateView):
         context = { 'file_list':file_list, 'users': users, 'shared_list': shared_list, 'form': form}
         does_req_accept_json = request.accepts("application/json")
         is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest" and does_req_accept_json
-        print(users)
         if is_ajax_request:
             html = render_to_string(
                 template_name="filesystem/file_list_result_partial.html", 
@@ -1387,7 +1409,6 @@ class SharedFileCreateView(CreateView):
             users = None
         file_list = SharedFiles.objects.all()
         private_file_list = SharedPrivateFiles.objects.all()
-        print(private_file_list)
         form = self.form_class(initial={'owner': self.request.user})
         context = { 'file_list':file_list, 'private_file_list':private_file_list, 'users': users, 'form': form}
         does_req_accept_json = request.accepts("application/json")
@@ -1777,9 +1798,6 @@ class AnnouncementCreateView(CreateView):
             admins = get_user_model().objects.filter(is_custom_admin=True)
             if form.is_valid():
                 new_announcement = form.save()
-                # print(new_announcement.send_to)
-                # print(new_announcement.title)
-                # print(new_announcement.message)
                 if new_announcement.send_to == 'Everyone':
                     for user in users:
                         Notification.objects.create(notification_type=5, to_user=user, from_user=request.user, announcement=new_announcement)

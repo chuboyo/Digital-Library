@@ -144,7 +144,7 @@
                 <div class="modal-body">
                     
                     <p id="nameLabel">New folder</p>
-                    <form action="{% url 'folder_create' %}" id="folderCreateForm" method="post">{% csrf_token %}
+                    <form action="{% url 'private_folder_create' %}" id="folderCreateForm" method="post">{% csrf_token %}
                       <input class="form-control" list="datalistOptions" id="renameInput2" placeholder="" name="createFolder"> 
                     </form>
                      
@@ -355,7 +355,7 @@
                                             </select>
                                           </div>
                                           <div class="col-9">
-                                            <p id="nameLabel2">By selecting 'All' this file will be open to the public with no restrictions</p>
+                                            <p id="nameLabel2">By selecting 'All' this folder will be open to the public with no restrictions</p>
                                           </div>
                                         </div>
                                     
