@@ -51,8 +51,15 @@ class PublicFiles(models.Model):
     def __str__(self):
         return f' {self.filename}'
 
+    # def get_absolute_url(self):
+    #     return reverse('file_list')
+
     def get_absolute_url(self):
-        return reverse('file_list')
+        file = PublicFiles.objects.get(id=self.pk)
+        if file.folder:
+            return reverse('folder_detail', args=[str(file.folder.id)])
+        else:
+            return reverse('file_list')
     
     class Meta:
         ordering = ['-date']
@@ -108,8 +115,15 @@ class PrivateFiles(models.Model):
     def __str__(self):
         return f' {self.filename}'
 
+    # def get_absolute_url(self):
+    #     return reverse('private_file_list')
+    
     def get_absolute_url(self):
-        return reverse('private_file_list')
+        file = PrivateFiles.objects.get(id=self.pk)
+        if file.folder:
+            return reverse('private_folder_detail', args=[str(file.folder.id)])
+        else:
+            return reverse('private_file_list')
     
     class Meta:
         ordering = ['-date']

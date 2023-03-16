@@ -1691,6 +1691,8 @@ class PrivateFileUpdateView(UpdateView):
             'form': form
         })
     
+
+    
 #CBV to get private folder list for get request and add new files to private files model on post request
 class PrivateFolderCreateView(CreateView):
     model = PrivateFolders

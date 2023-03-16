@@ -97,7 +97,7 @@ input:-webkit-autofill:active,
 input:-internal-autofill-selected,
 input:-internal-autofill-previewed {
     background-color: transparent  !important;
-    -webkit-box-shadow: 0 0 0 30px #E7F5EE  inset !important;
+    -webkit-box-shadow: 0 0 0 30px #E2E8EA  inset !important;
 }
 
 /* ---------------------------------------------------
