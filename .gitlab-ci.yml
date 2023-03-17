@@ -1,0 +1,25 @@
+image: "docker:20.10.16"
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
+services:
+  - docker:20.10.16-dind
+  
+
+stages:
+
+  - Deploy
+
+Deploy Container:
+ stage: Deploy
+ only:
+ - develop
+ 
+ script:
+ - mkdir -p ~/.ssh
+ - echo "$PRIVATEKEY" >> ~/.ssh/id_rsa
+ - chmod 600 ~/.ssh/id_rsa
+ - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+ - ssh -p3322  e4esysadmin@217.79.255.114 "cd /opt/digital-library  && git pull origin develop  && docker-compose up -d --build && bash update.sh && docker ps"
+
