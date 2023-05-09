@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Deactivate User View" %}{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center vh-100" id="last_div">
+    <form class="" action="" method="post"> {% csrf_token %}
+        <div class="text-center mb-4">
+            <h2>Are you sure you want to deactivate user???</h2>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-4">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-success deactivateUser" href="{% url 'reg_list' %}" id="deletePic">Deactivate user</a>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-success" href="{% url 'reg_list' %}" id="loginButton">Go back</a>
+                    </div>
+                </div>
+                <div class="col-2"></div>
+            </div>
+            
+            
+            <!-- <input class="d-inline-block m-1 button btn-danger squared" type="submit" value="Confirm">
+            <a class="link d-inline-block m-1 button btn-dark squared" href="{% url 'user_list' %}">Go Back</a> -->
+        </div>
+        
+    </form>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+  <script>
+    $(document).ready(function() {
+        // send request to change the is_custom_admin state on customSwitches toggle
+        $(".deactivateUser").on("click", function() {
+          // alert(e.target.id);
+        //   identifier = e.target.id;
+
+            $.ajax({
+                url: "{% url 'deactivated_user' user.id %}", 
+                data: {
+                  csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                type: "POST",
+                dataType : "json",
+            })
+            
+            // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+            .done(function(data) {
+                console.log(data);
+                // show some message according to the response. 
+                // For eg. A message box showing that the status has been changed
+            })
+            .always(function() {
+                console.log('[Done]');
+            })
+        })
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+          });
+    });
+  </script>
+{% endblock js %}

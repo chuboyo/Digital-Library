@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% block head_title %}{% trans "You don lost" %}{% endblock %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="text-center">
+            <h1 class="fs-3">Maybe you're lost, you can find your way</h1>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-success" href="{% url 'account_logout' %}" id="loginButton"> Go to logout</a>
+                        </div>
+                </div>
+                <div class="col-4"></div>
+            </div>
+        </div>
+        
+
+    </div>
+{% endblock content %}

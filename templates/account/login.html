@@ -1,0 +1,146 @@
+{% extends "base2.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<!-- <h1>{% trans "Sign In" %}</h1>
+
+<p>{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+</form> -->
+
+<div class="container text-start" id="loginBody">
+  <div class="row">
+    <div class="col-12">
+      <h2>Login</h2>
+    </div>
+  </div>
+</div>
+
+<div class="container text-start">
+  <div class="row">
+    <div class="col-12">
+      <p>Please enter your login details below</p>
+    </div>
+  </div>
+</div>
+<form method="post">
+  {% csrf_token %}
+  <div class="container text-start mb-2">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="mb-4">
+          <label for="exampleFormControlInput1" class="form-label">Username/Email address</label>
+          <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+          {{form.login}}
+        </div>
+      </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+  </div>
+  
+  <div class="container text-start">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="mb-2">
+          <label for="exampleFormControlInput1" class="form-label">Password</label>
+          <!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder=""> -->
+          {{form.password}}
+        </div>
+        {% if form.errors %}
+          {% for field in form %}
+              {% for error in field.errors %}
+                  <!-- <div class="alert alert-danger">
+                      <strong>{{ error|escape }}</strong>
+                  </div> -->
+                  <span class="text-danger">{{ error|escape }}</span>
+              {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+              <!-- <div class="alert alert-danger">
+                  <strong>{{ error|escape }}</strong>
+              </div> -->
+              <span class="text-danger">{{ error|escape }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+  </div>
+  
+  <div class="container text-start">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-check">
+          <!-- <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"> -->
+          {{form.remember}}
+          <label class="form-check-label" for="flexCheckDefault">
+            Keep me logged in
+          </label>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <p><a href="{% url 'account_reset_password' %}" id="altLinkColor">Forgot your password?</a></p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container text-start mb-4">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="d-grid gap-2">
+          <button class="btn btn-success" type="submit" id="loginButton">Login</button>
+        </div>
+      </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid mt-2">
+    <!-- {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            <span class="text-danger">{{ error|escape }}</span>
+        {% endfor %}
+    {% endif %} -->
+  </div>
+</form>
+
+
+<div class="container text-start">
+  <div class="row">
+    <div class="col-md-9">
+      <div class="d-grid gap-2">
+        <a class="btn btn-success" type="button" id="registerButton" href="{% url 'account_signup' %}">Don't have an account? Register now</a>
+      </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% load custom_tags %}
+
+{% block head_title %}{% trans "Reg List View" %}{% endblock %}
+
+{% block content %}
+    <!-- <h1>{% trans "Reg List is Under Construction" %}</h1>
+    {% for user in reg_list %}
+        <a href="{% url 'admin_edit' user.id %}">{{ user.username}}</a>
+    {% endfor %} -->
+    <nav class="nav">
+        <div class="container text-center">
+            <div class="row" id="navrow">
+                <div class="col-sm-10">
+                    <ul class="nav justify-content-start">
+                        <li class="nav-item">
+                            <button type="button" id="sidebarCollapse" class="btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                </svg>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- <div class="col-sm-5">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <form action="{% url 'user_search_list' %}" method="get">
+                                <input class="form-control" list="datalistOptions" id="navinput" placeholder="Search registered users" name="regSearch">
+                            </form>
+                        </li>
+                    </ul>
+                </div> -->
+                <div class="col-sm-2">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <!-- <a class="nav-link active" aria-current="page" href="#"><img src="{% static 'images/bell-icon.png' %}" alt=""></a> -->
+                            {% show_notifications %}
+                        </li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <li class="nav-item">
+                            {% if request.user.profile_picture %}
+                            <div class="dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="recolorDropdown"><img src="{{ request.user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                              </svg></a>
+
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'user_edit' request.user.id %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                </svg>&nbsp;&nbsp;&nbsp;&nbsp;Edit profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_change_password' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                </svg>&nbsp;&nbsp;&nbsp;&nbsp;Change password</a></li>
+                                <li><a class="dropdown-item" href="{% url 'all_notifications' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                </svg>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
+                                  <path d="M7.5 1v7h1V1h-1z"/>
+                                  <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                              </svg>&nbsp;&nbsp;&nbsp;&nbsp;Logout</a></li>
+                              </ul>
+                            </div> 
+                            {% else %}
+                            <div class="dropdown">
+                              <a class="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="recolorDropdown"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                              </svg></a>
+
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'user_edit' request.user.id %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                </svg>&nbsp;&nbsp;&nbsp;&nbsp;Edit profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_change_password' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                </svg>&nbsp;&nbsp;&nbsp;&nbsp;Change password</a></li>
+                                <li><a class="dropdown-item" href="{% url 'all_notifications' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                </svg>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
+                                  <path d="M7.5 1v7h1V1h-1z"/>
+                                  <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                                </svg>&nbsp;&nbsp;&nbsp;&nbsp;Logout</a></li>
+                              </ul>
+                            </div>
+                            {% endif %} 
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<div class="container text-start" id="behave">
+    <div class="row">
+        <div class="col-12">
+            <h4>Registration</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container text-start mb-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <p>Manage registered users on the digital library platform</p>
+        </div>
+        <div class="col-lg-2">
+            <select class="form-select" aria-label="Default select example" id="userListDropdown">
+                <option selected>Sort by: Name</option>
+            </select>
+        </div>
+        <div class="col-lg-2">
+            <a href=""><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+            </svg></a>
+        </div>
+    </div>
+</div>
+
+<div class="container text-start pt-2" id="tableHeading">
+    <div class="row">
+        <div class="col-lg-2">
+            <p>Name</p>
+        </div>
+        <div class="col-lg-2">
+            <p>Username</p>
+        </div>
+        <div class="col-lg-3">
+            <p>Email</p>
+        </div>
+        <div class="col-lg-2">
+            <p>Date registered</p>
+        </div>
+        <div class="col-lg-3">
+            <p>Action</p>
+        </div>
+        <!-- <div class="col-lg-1">
+            <p></p>
+        </div> -->
+    </div>
+</div>
+
+{% if reg_list %}
+    {% for user in reg_list %}
+    <div class="container text-start pt-2" id="tableBody">
+        <div class="row" id="tableRow">
+
+            <div class="col-lg-2">
+                {% if user.profile_picture %}
+                <p id="nameLabel"><img src="{{ user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
+                {% else %}
+                <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{user.first_name}} {{user.last_name}}</p>
+                {% endif %}
+            </div>
+            <div class="col-lg-2">
+                <p>{{  user.username }}</p>
+            </div>
+            <div class="col-lg-3">
+                <p>{{user.email}}</p>
+            </div>
+            <div class="col-lg-2">
+                <p>{{ user.date }}</p>
+            </div>
+
+            <div class="col-lg-3 text-start">
+                {% if user.is_active %}
+                <p id="actionLabel"><a href="{% url 'admin_edit' user.id %}">Deactivate</a></p>
+                {% else %}
+                <p id="actionLabel"><a href="{% url 'admin_edit' user.id %}">Activate</a></p>
+                {% endif %}
+            </div>
+
+
+            <!-- <div class="col-lg-1">
+                <p id="actionLabel"><a class="" href="{% url 'user_delete' user.pk %}">Delete</a></p>
+                <button class="btn btn-success" type="submit" id="loginButton">Register</button>
+            </div> -->
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="container text-start pt-2" id="tableBody">
+    <div class="row" id="tableRow">
+      
+      <div class="col-lg-12 text-center ">
+        <p>No Users Found</p>
+      </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% endblock %}
+
+{% block js %}
+  <script>
+    $(document).ready(function() {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+          });
+    });
+  </script>
+{% endblock js %}

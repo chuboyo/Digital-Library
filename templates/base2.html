@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Digital Library{% endblock title %}</title>
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/app2.css' %}">
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+    </head>
+    <body>
+        
+    {% block navbar %}
+    <div class="enclose">
+        <!-- Sidebar  -->
+        <nav id="leftHand">
+            
+            <img src="{% static 'images/threearms.png' %}" alt="hugenerd" width="96" height="96" class="rounded-circle">
+            <h2 class="alignHeader">Welcome to the FMOH Digital Library</h2>
+            <p class="alignText">The Digital Library is a knowledge management platform containing historical and 
+                practical resources including templates and archives for memos, reports, letters, job aids, 
+                policy papers, and other important documents used by the division.</p>
+            
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="rightHand">
+            {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                    <div class="container p-0">
+                        <div class="row">
+                        <div class="col-md-9">
+                            <div class="alert {{ message.tags }}" role="alert" >
+                            <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="True">&times;</span>
+                            </button> -->
+                                {{ message }}
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+            {% endfor %}
+            <div class="container text-center mb-2">
+                <div class="row" id="navrow">
+                    <div class="col-sm-5">
+                        <ul class="nav justify-content-start">
+                            <li class="nav-item">
+                                <button type="button" id="sidebarCollapsing" class="btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                    </svg>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+        
+        
+            {% block content %}
+            
+        
+            {% endblock content %}
+            
+        </div>
+    </div>
+    {% endblock navbar %}
+        
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    {% block js %}
+        <script>
+            $(document).ready(function () {
+                $('#sidebarCollapsing').on('click', function () {
+                    $('#leftHand').toggleClass('active');
+                });
+            });
+        </script>
+    {% endblock js %}
+
+    {{ redirect_to_login_immediately }}
+    </body>
+</html>

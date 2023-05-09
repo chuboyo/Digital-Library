@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Digital Library{% endblock title %}</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/app3.css' %}">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+</head>
+<body>
+    {% block navbar %}
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        
+        <!-- <div class="row align-items-center">
+            <div class="col-md-12 text-center">
+                <img src="{% static 'images/threearms.png' %}" alt="hugenerd" width="43" height="43" class="rounded-circle">
+                <h2>Digital Library</h2>
+            </div>
+        </div> -->
+        <div class="container text-center mt-4">
+            <div class="row" id="topLabel">
+              <div class="col-md-12 align-self-end">
+                <img src="{% static 'images/threearms.png' %}" alt="hugenerd" width="43" height="43" class="rounded-circle">
+                Digital Library
+              </div>
+            </div>
+
+            {% block content %}
+            
+            {% endblock content %}
+
+            <!-- <div class="row mb-2">
+                <div class="col-md-12 align-self-end">
+                    <img src="{% static 'images/wetin-be-this.png' %}" alt="hugenerd" width="67" height="67" class="test mb-3">
+                    <h4>Sorry... Your session has timed out</h4>
+                    <p class="testy">You were timed out due to inactivity. Please choose to stay logged in next time, otherwise 
+                        you will be logged out automatically
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5 align-self-end">  
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-success" type="button" action="" id="customButton1">Login</a>
+                    </div>
+                </div>
+                <div class="col-md-5 align-self-end">
+                </div>
+            </div> -->
+        </div>
+            
+       
+    </div>
+    {% endblock navbar %}
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    {% block js %}
+        <script>
+            $(document).ready(function () {
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                });
+            });
+        </script>
+    {% endblock js %}
+    
+    {{ redirect_to_login_immediately }} 
+</body>
+</html>

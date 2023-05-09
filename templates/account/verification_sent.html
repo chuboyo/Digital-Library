@@ -1,0 +1,45 @@
+{% extends "base3.html" %}
+
+{% load static %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
+
+{% block content %}
+    <!-- <h1>{% trans "Verify Your E-mail Address" %}</h1>
+
+    <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification e-mail in your main inbox, check your spam folder. Please contact us if you do not receive the verification e-mail within a few minutes.{% endblocktrans %}</p> -->
+    
+    <div class="row mb-2">
+        <div class="col-md-12 align-self-end">
+            <img src="{% static 'images/verify-image.png' %}" alt="hugenerd" width="64" height="64" class="verificationDoneBody mb-3">
+            <h4>You're almost there...</h4>
+            <p class="resetDoneP">Before we get started, please verify your Digital Library Account.
+                A verification mail has been sent to your email
+            </p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 align-self-end">  
+        </div>
+        <div class="col-md-4 align-self-end">
+            <div class="d-grid gap-2">
+                <a class="btn btn-success" type="button" id="customButton2" href="">Didn't receive a verification mail? Resend mail</a>
+            </div>
+        </div>
+        <div class="col-md-4 align-self-end">
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4 align-self-end">  
+        </div>
+        <div class="col-md-4 align-self-end">
+            <a href="{% url 'account_login' %}">Back to Login</a>
+        </div>
+        <div class="col-md-4 align-self-end">
+        </div>
+    </div>
+{% endblock %}

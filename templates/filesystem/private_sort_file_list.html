@@ -1,0 +1,932 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+{% load custom_tags %}
+
+{% block head_title %}{% trans "Private File Sort List View" %}{% endblock %}
+
+{% block content %}
+ <nav class="nav">
+                <div class="container text-center">
+                    <div class="row" id="navrow">
+                        <div class="col-sm-5">
+                            <ul class="nav justify-content-start">
+                                <li class="nav-item">
+                                    <button type="button" id="sidebarCollapse" class="btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
+                                        </svg>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-5">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                  <!-- File search form -->
+                                    <form action="{% url 'private_file_search_list' %}" method="get">
+                                        <input class="form-control" list="datalistOptions" id="navinput" placeholder="Search private files" name="publicFilesSearch">
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-2">
+                            <ul class="nav">
+                                <li class="nav-item">
+                                    <!-- <a class="nav-link active" aria-current="page" href="#"><img src="{% static 'images/bell-icon.png' %}" alt=""></a> -->
+                                    {% show_notifications %}
+                                </li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <li class="nav-item">
+                                    {% if request.user.profile_picture %}
+                                    <div class="dropdown">
+                                      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="recolorDropdown"><img src="{{ request.user.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                      </svg></a>
+
+                                      <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'user_edit' request.user.id %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                          <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                          <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Change password</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'all_notifications' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_logout' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
+                                          <path d="M7.5 1v7h1V1h-1z"/>
+                                          <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                                      </svg>&nbsp;&nbsp;&nbsp;&nbsp;Logout</a></li>
+                                      </ul>
+                                    </div> 
+                                    {% else %}
+                                    <div class="dropdown">
+                                      <a class="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="recolorDropdown"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                      </svg></a>
+
+                                      <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'user_edit' request.user.id %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                          <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Edit profile</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_change_password' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                          <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Change password</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'all_notifications' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Notifications</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'account_logout' %}" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
+                                          <path d="M7.5 1v7h1V1h-1z"/>
+                                          <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Logout</a></li>
+                                      </ul>
+                                    </div>
+                                    {% endif %} 
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+<div class="container text-start" id="behave">
+    <div class="row">
+      <div class="col-12">
+        <h4>Private Files</h4>
+      </div>
+    </div>
+</div>
+
+<div class="container text-start mb-4">
+    <div class="row">
+      <div class="col-lg-2">
+        <div class="dropdown">
+          <a class="btn btn-secondary dropdown-toggle disabled" id="loginButton" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            </svg>
+            New
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+              <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+            </svg>
+          </a>
+        
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">
+              <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z"/>
+              <path d="M13.5 10a.5.5 0 0 1 .5.5V12h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V13h-1.5a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z"/>
+            </svg>&nbsp;&nbsp;&nbsp;&nbsp;New folder</a></li>
+            <li>
+              <!-- File upload form -->
+              <form class="center-form width-100" id="fileForm" action="" method="post" enctype="multipart/form-data"> {% csrf_token %}
+                    {{form.filename}}
+                    {{form.owner}}
+                    <a class="dropdown-item" href="#" type="button" id="fileButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-up" viewBox="0 0 16 16">
+                      <path d="M8 11a.5.5 0 0 0 .5-.5V6.707l1.146 1.147a.5.5 0 0 0 .708-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L7.5 6.707V10.5a.5.5 0 0 0 .5.5z"/>
+                      <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
+                    </svg>&nbsp;&nbsp;&nbsp;&nbsp;File upload</a>
+                    <input class="button squared button-dark" type="submit" value="Create Record" hidden>
+            </form>
+          </li>
+            <li><a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+              <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"/>
+            </svg>&nbsp;&nbsp;&nbsp;&nbsp;Folder upload</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-4">
+
+      </div>
+      <div class="col-lg-2 text-center">
+        <h5><span class="badge rounded-pill text-bg-success files-selected" id="pillButtonCustomInactive">0 Files selected</span></h5>
+      </div>
+      <div class="col-lg-2">
+        <div class="dropdown">
+          <a class="btn btn-secondary dropdown-toggle" id="sortButton" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort by: File type
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+              <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+            </svg>
+          </a>
+        
+          <ul class="dropdown-menu">
+            <li><button class="dropdown-item drop-click" id="dropBottom" value="pdf">
+              <img src="{% static 'images/pdf2.png' %}" alt="hugenerd" width="30" height="30" class="">
+              &nbsp;&nbsp;&nbsp;&nbsp;PDF</button></li>
+            <li><button class="dropdown-item drop-click" id="dropBottom" value="docx">
+              <img src="{% static 'images/word2.png' %}" alt="hugenerd" width="30" height="30" class="">
+              &nbsp;&nbsp;&nbsp;&nbsp;Documents</button></li>
+            <li><button class="dropdown-item drop-click" id="dropBottom" value="xlsx">
+              <img src="{% static 'images/xcel2.png' %}" alt="hugenerd" width="30" height="30" class="">
+              &nbsp;&nbsp;&nbsp;&nbsp;Spreadsheets</button></li>
+            <li><button class="dropdown-item drop-click" id="dropBottom" value="pptx">
+              <img src="{% static 'images/pptx2.png' %}" alt="hugenerd" width="30" height="30" class="">
+              &nbsp;&nbsp;&nbsp;&nbsp;Presentations</button></li>
+            <li><button class="dropdown-item drop-click" id="dropBottom" value="photos">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+                <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                <path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5V14zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4z"/>
+              </svg>
+              &nbsp;&nbsp;&nbsp;&nbsp;Photos & Images</button></li>
+            <li><button class="dropdown-item drop-click" value="videos">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-file-earmark-play" viewBox="0 0 16 16">
+                <path d="M6 6.883v4.234a.5.5 0 0 0 .757.429l3.528-2.117a.5.5 0 0 0 0-.858L6.757 6.454a.5.5 0 0 0-.757.43z"/>
+                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+              </svg>
+              &nbsp;&nbsp;&nbsp;&nbsp;Videos</button></li>
+              <li>
+                <!-- File sort form -->
+                <form class="center-form width-100" id="sortForm" action="{% url 'private_sort_file_list' %}" method="get"> {% csrf_token %}
+                  <input type="text" name="sortInput" id="sortInput" hidden>
+                </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-2">
+        <a href=""><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+        </svg></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="{% url 'private_file_list_grid' %}"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-grid-3x3-gap-fill" viewBox="0 0 16 16">
+          <path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V7zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2z"/>
+        </svg></a>
+      </div>
+    </div>
+</div>
+
+<div class="container text-start pt-2" id="tableHeading">
+    <div class="row">
+      <div class="col-lg-1">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled" disabled>
+          <label class="form-check-label" for="flexCheckDisabled">
+          </label>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <p>Name</p>
+      </div>
+      <div class="col-lg-2">
+        <p>Owner</p>
+      </div>
+      <div class="col-lg-2">
+        <p>Date created</p>
+      </div>
+      <div class="col-lg-2">
+        <p>Permissions</p>
+      </div>
+      <div class="col-lg-1">
+        <p>File size</p>
+      </div>
+      <div class="col-lg-1">
+        <p>Action</p>
+      </div>
+    </div>
+</div>
+
+
+{% if file_list %}
+  {% for file in file_list %}
+    {% if not file.recycled and not file.folder and file.owner == request.user %}
+        <div class="container text-start pt-2" id="tableBody">
+          <div class="row reStyle" id="tableRow">
+              <div class="col-lg-1" id="testCheckbox">
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input sample" id="flexCheckDefault" value="{{ file.id }}">
+                  </div>
+              </div>
+            {% if '.docx' in file.filename.url %}
+              
+                <div class="col-lg-3">
+                  <img src="{% static 'images/word2.png' %}" alt="hugenerd" width="30" height="30" class="">
+                  <a href="{{ file.filename.url }}">{{  file.filename|truncatechars:15 }}
+                    {% for shared in file.sharedprivatefiles_set.all %}
+                      {% ifchanged shared.filename.filename.url %}
+                        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">SHARED</span>
+                      {% endifchanged %}
+                    {% endfor %}
+                  </a>
+                </div>
+            {% elif 'pdf' in file.filename.url %}
+              <div class="col-lg-3">
+                <img src="{% static 'images/pdf2.png' %}" alt="hugenerd" width="30" height="30" class="">
+                <a href="{{ file.filename.url }}">{{  file.filename|truncatechars:15 }}
+                  {% for shared in file.sharedprivatefiles_set.all %}
+                      {% ifchanged shared.filename.filename.url %}
+                        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">SHARED</span>
+                      {% endifchanged %}
+                  {% endfor %}
+                </a>
+              </div>
+            {% elif 'pptx' in file.filename.url or 'ppt' in file.filename.url %}
+              <div class="col-lg-3">
+                <img src="{% static 'images/pptx2.png' %}" alt="hugenerd" width="30" height="30" class="">
+                <a href="{{ file.filename.url }}">{{  file.filename|truncatechars:15 }}
+                  {% for shared in file.sharedprivatefiles_set.all %}
+                      {% ifchanged shared.filename.filename.url %}
+                        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">SHARED</span>
+                      {% endifchanged %}
+                  {% endfor %}
+                </a>
+              </div>
+            {% elif 'xlsx' in file.filename.url %}
+              <div class="col-lg-3">
+                <img src="{% static 'images/xcel2.png' %}" alt="hugenerd" width="30" height="30" class="">
+                <a href="{{ file.filename.url }}">{{  file.filename|truncatechars:15 }}
+                  {% for shared in file.sharedprivatefiles_set.all %}
+                      {% ifchanged shared.filename.filename.url %}
+                        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">SHARED</span>
+                      {% endifchanged %}
+                  {% endfor %}
+                </a>
+              </div>
+            {% elif 'png' in file.filename.url or 'jpg' in file.filename.url or 'jpeg' in file.filename.url %}
+              <div class="col-lg-3">
+                <img src="{{ file.filename.url }}" alt="hugenerd" width="32" height="32" class="">
+                <a href="{{ file.filename.url }}">{{  file.filename|truncatechars:15 }}
+                  {% for shared in file.sharedprivatefiles_set.all %}
+                      {% ifchanged shared.filename.filename.url %}
+                        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">SHARED</span>
+                      {% endifchanged %}
+                  {% endfor %}
+                </a>
+              </div>
+            {% elif 'mkv' in file.filename.url or 'mpeg' in file.filename.url or 'mp4' in file.filename.url or 'mov' in file.filename.url %}
+              <div class="col-lg-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-file-earmark-play" viewBox="0 0 16 16">
+                  <path d="M6 6.883v4.234a.5.5 0 0 0 .757.429l3.528-2.117a.5.5 0 0 0 0-.858L6.757 6.454a.5.5 0 0 0-.757.43z"/>
+                  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                </svg>
+                <a href="{{ file.filename.url }}">{{  file.filename|truncatechars:15 }}
+                  {% for shared in file.sharedprivatefiles_set.all %}
+                      {% ifchanged shared.filename.filename.url %}
+                        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">SHARED</span>
+                      {% endifchanged %}
+                  {% endfor %}
+                </a>
+              </div>
+            {% else %}
+              <div class="col-lg-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-file-earmark" viewBox="0 0 16 16">
+                  <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+                </svg>
+                <a href="{{ file.filename.url }}">{{  file.filename|truncatechars:15 }}
+                  {% for shared in file.sharedprivatefiles_set.all %}
+                      {% ifchanged shared.filename.filename.url %}
+                        <span class="badge rounded-pill text-bg-success" id="pillButtonCustomInactive">SHARED</span>
+                      {% endifchanged %}
+                  {% endfor %}
+                </a>
+              </div>
+            {% endif %}
+            
+
+            <div class="col-lg-2">
+                {% if file.owner.profile_picture %}
+                    <p id="nameLabel"><img src="{{ file.owner.profile_picture.url }}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{file.owner.first_name}} {{file.owner.last_name}}</p>
+                {% else %}
+                    <p id="nameLabel"><img src="{% static 'images/empty-profile.png' %}" alt="hugenerd" width="30" height="30" class="rounded-circle">&nbsp;&nbsp;{{file.owner.first_name}} {{file.owner.last_name}}</p>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-2">
+              <p>{{  file.date }}</p>
+            </div>
+
+            <div class="col-lg-2">
+              <p>{{  file.permission_field }}</p>
+            </div>
+
+            <div class="col-lg-1">
+              <p>{{  file.filename.size|filesizeformat }}</p>
+            </div>
+
+            <div class="col-lg-1">
+              <div class="dropdown">
+                  <button class="modalTrigger" href="#" data-bs-toggle="dropdown" aria-expanded="false"  id="iconButton" value="{{ file.id }}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="grey" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                  </svg></button>
+
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                      <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                      <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                    </svg>&nbsp;&nbsp;&nbsp;&nbsp;Preview</a></li>
+                    {% if request.user.is_custom_admin or request.user.user_role == 'manager' or request.user.user_role == 'content_manager' or request.user.user_role == 'contributor' %}
+                    <li><a type="button" class="dropdown-item modal-button" id="dropdownLink">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                        <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                      </svg>&nbsp;&nbsp;&nbsp;&nbsp;Share</a></li>
+                    {% endif %}
+                    {% if request.user.is_custom_admin or request.user.user_role == 'manager' or request.user.user_role == 'content_manager' or request.user.user_role == 'contributor' %}
+                      <li><a type="button" class="dropdown-item modal-button8" id="dropdownLink">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
+                          <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1Zm0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                          <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;Delete users</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="#" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                      <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"/>
+                    </svg>&nbsp;&nbsp;&nbsp;&nbsp;Move to</a></li>
+                    {% if file.permission_field == 'All' %}
+                      {% if request.user.is_custom_admin or request.user.user_role == 'manager' or request.user.user_role == 'content_manager' or request.user.user_role == 'contributor' %}
+                      <li><a class="dropdown-item chubi2" href="{% url 'update_private_file' file.id %}" id="dropdownLink" value="{{file.id}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">
+                        <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z"/>
+                        <path d="M13.5 10a.5.5 0 0 1 .5.5V12h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V13h-1.5a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z"/>
+                      </svg>&nbsp;&nbsp;&nbsp;&nbsp;Update</a></li>
+                      {% endif %}
+                    {% endif %}
+                    {% if request.user.is_custom_admin or request.user.user_role == 'manager' or request.user.user_role == 'content_manager' or request.user.user_role == 'contributor' %}
+                    <li><a type="button" class="dropdown-item modal-button2" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg>&nbsp;&nbsp;&nbsp;&nbsp;Rename</a></li>
+                    {% endif %}
+                    {% if request.user.is_custom_admin or request.user.user_role == 'manager' or request.user.user_role == 'content_manager' or request.user.user_role == 'contributor' %}
+                    <li><a type="button" class="dropdown-item modal-button3" id="dropdownLink"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                    </svg>&nbsp;&nbsp;&nbsp;&nbsp;Edit Permissions</a></li>
+                    {% endif %}
+                    {% if request.user.is_custom_admin or request.user.user_role == 'manager' or request.user.user_role == 'content_manager' %}
+                    <li><a type="button" class="dropdown-item modal-button4" href="#" id="actionLabel"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-trash3" viewBox="0 0 16 16">
+                      <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                    </svg>&nbsp;&nbsp;&nbsp;&nbsp;Move to recycle bin</a></li>
+                    {% endif %}
+                  </ul>
+              </div>
+
+              <!-- Custom Modal -->
+              <div id="custom-modal-{{file.id}}" class="modal fade" aria-hidden="true" role="dialog" data-backdrop="static">
+                <div class="modal-dialog modal-lg wizard-v2-modal-dialog">
+                  <div class="modal-content">
+                    <div class="wizard-v2-menubar jc-space-between">
+                      
+                      <div>
+                      </div>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <p id="nameLabel">Share File &nbsp;&nbsp;&nbsp;&nbsp;<span class="greenText">{{file.filename|truncatechars:15}}</span></p>
+                        <input class="form-control user-input" list="datalistOptions" id="user-input-{{file.id}}" placeholder="Add people to share file with" name="userSearch">
+                      <div class="modal-replaceable">
+                        {% include 'filesystem/file_list_result_partial.html' %}
+                      </div>
+                      <div class="appendage">
+                        <div class="container">
+                          <div class="row">
+                              <div class="col-7">
+                                  <h6>Name(s)</h6>
+                              </div>
+                              <div class="col-3">
+                                  <h6>Permissions</h6>
+                              </div>
+                              <div class="col-2">
+                                  
+                              </div>
+                          </div>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <div class="pull-right">
+                        <button class="closeModal" id="iconButton">Cancel</button>
+                        <input type='button' class='btn btn-finish btn-fill btn-primary btn-wd shareSubmit' id="loginButton" name='finish' value='Send' />
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Custom Modal2 -->
+              <div id="custom-modal2-{{file.id}}" class="modal fade" aria-hidden="true" role="dialog" data-backdrop="static">
+                <div class="modal-dialog modal-lg wizard-v2-modal-dialog">
+                  <div class="modal-content">
+                    <div class="wizard-v2-menubar jc-space-between">
+                    </div>
+                    <div class="modal-body">
+                        
+                        <p id="nameLabel">Rename file</p>
+                        <input class="form-control renameInput" list="datalistOptions" id="renameInput-{{file.id}}" placeholder="" name="">    
+              
+                    </div>
+                    <div class="modal-footer">
+                      <div class="pull-right">
+                        <button class="closeModal2" id="iconButton">Cancel</button>
+                        <input type='button' class='btn btn-finish btn-fill btn-primary btn-wd renameSubmit' id="loginButton" name='finish' value='Send' />
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Custom Modal3 -->
+              <div id="custom-modal3-{{file.id}}" class="modal fade" aria-hidden="true" role="dialog" data-backdrop="static">
+                <div class="modal-dialog modal-lg wizard-v2-modal-dialog">
+                  <div class="modal-content">
+                    <div class="wizard-v2-menubar jc-space-between">
+                      
+                      <div>
+                      </div>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <p id="nameLabel">Edit permissions &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="greenText">{{file.filename|truncatechars:10}}</span></p>
+                        <div class="row">
+                          <div class="col-3">
+                            <select class="form-select permissionSelect" aria-label="Default select example" id="permissionSelect-{{file.id}}">
+                              <option>All</option>
+                              <option>View</option>
+                            </select>
+                          </div>
+                          <div class="col-9">
+                            <p id="nameLabel2">By selecting 'All' this file will be open to the public with no restrictions</p>
+                          </div>
+                        </div>
+                      
+                        
+              
+                    </div>
+                    <div class="modal-footer">
+                      <div class="pull-right">
+                        <button class="closeModal3" id="iconButton">Cancel</button>
+                        <input type='button' class='btn btn-finish btn-fill btn-primary btn-wd editPermissionSubmit' id="loginButton" name='finish' value='Send' />
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Custom Modal 4-->
+              <div id="custom-modal4-{{file.id}}" class="modal fade" aria-hidden="true" role="dialog" data-backdrop="static">
+                <div class="modal-dialog modal-lg wizard-v2-modal-dialog">
+                  <div class="modal-content">
+                    <div class="wizard-v2-menubar2 jc-space-between">
+                      
+                      <div>
+                      </div>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <p id="nameLabel"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                          <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                        </svg>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Move to recycle bin</p>
+                        <p>Are you sure you want to move to recycle bin? The file will still persist in the recycle bin!</p>
+                      
+                        
+              
+                    </div>
+                    <div class="modal-footer">
+                      <div class="pull-right">
+                        <button class="closeModal4" id="iconButton">Cancel</button>
+                        <input type='button' class='btn btn-finish btn-fill btn-primary btn-wd recycleSubmit' id="deletePic" name='' value='Move file' />
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+               <!-- Custom Modal8 -->
+               <div id="custom-modal8-{{file.id}}" class="modal fade" aria-hidden="true" role="dialog" data-backdrop="static">
+                <div class="modal-dialog modal-lg wizard-v2-modal-dialog">
+                  <div class="modal-content">
+                    <div class="wizard-v2-menubar2 jc-space-between">
+                      
+                      <div>
+                      </div>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <p id="nameLabel">Delete Users on {{file.filename|truncatechars:15}}</p>
+                        <p>Click on the 'X' icon to delete user</p>
+                        <div class="container">
+                          <div class="row">
+                              <div class="col-7">
+                                  <h6>Name(s)</h6>
+                              </div>
+                              <div class="col-3">
+                                  <h6>Permissions</h6>
+                              </div>
+                              <div class="col-2">
+                                  
+                              </div>
+                          </div>
+                        </div>
+                      <div class="modal-replaceable2">
+                        {% include 'filesystem/shared_user_list_result_partial.html' %}
+                      </div>
+                      <div class="appendage">
+                       
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <div class="pull-right">
+                        <button class="closeModal8" id="iconButton">Cancel</button>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <div class="container text-center">
+    <div class="row mb-2">
+      <div class="col-md-12 align-self-end">
+          <img src="{% static 'images/emptyfolder.png' %}" alt="hugenerd" width="128" height="128" class="verificationDoneBody mb-3">
+          <p class="resetDoneP">You currently have no such private files
+          </p>
+      </div>
+    </div>
+
+  </div>
+{% endif %}
+
+{% endblock %}
+
+{% block js %}
+  <script>
+    
+    $(document).ready(function() {
+        
+        // constant and variable declarations
+        const user_input = $(".user-input")
+        const users_div = $('.modal-replaceable')
+        const endpoint = '/home/'
+        const delay_by_in_ms = 700
+        let myCheckboxes = new Array();
+        let myUsers = new Array();
+        let myUsersPermissions = new Array();
+        let file_id;
+        let rename_input;
+        let permission_value;
+        let selected_files = 0;
+        let scheduled_function = false;
+        let ajax_call = function (endpoint, request_parameters) {
+          
+          $.getJSON(endpoint, request_parameters)
+          
+            .then(response => {
+               // fade out the users_div, then:
+              users_div.fadeTo('slow', 0).promise().then(() => {
+                // replace the HTML contents
+                users_div.html(response['html_from_view'])
+                // fade-in the div with new contents
+                users_div.fadeTo('slow', 1)
+                
+                // onClick of button to add users, get button value(user id) and push to myUsers array 
+                // and get associated user permission to push to myUsersPermissions array
+                $('.userModal .clickMe').off().on('click', function () {
+                    var $duplicate = $(this).parent().parent().parent()
+                    var $clone = $duplicate.clone().appendTo(".appendage")
+                    let new_id = $(this).parent().prev().children(':first').attr('id')
+                    // replace initial button icon(+ sign) with new icon(cancel sign)
+                    $('.appendage').find('i').replaceWith(`<i class="bi bi-x-circle" style="color: red;"></i>`)
+                    myUsers.push($(this).val());
+                    myUsersPermissions.push($(this).parent().prev().children(':first').val())
+                    let index2 = myUsersPermissions.indexOf($(this).parent().prev().children(':first').val())
+                    // remember selected permission field value in appendage div 
+                    $(`.appendage #${new_id}`).val(myUsersPermissions.at(index2))
+                })
+              })
+            })
+            .always(function(){
+              
+            })
+            
+        }
+
+
+        user_input.on('keyup', function () {
+          const request_parameters = {
+            q: $(this).val() // value of user_input: the HTML element with ID user-input
+          }
+          // if scheduled_function is NOT false, cancel the execution of the function
+          if (scheduled_function) {
+            clearTimeout(scheduled_function)
+          }
+
+          // setTimeout returns the ID of the function to be executed
+          scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint, request_parameters)
+        })
+
+        
+        // onClick of modalTrigger set file id to button instance value 
+        $(".modalTrigger").on("click", function(e) {
+            file_id = $(this).val()
+        })
+      
+        // onClick of clickMe button within div with class - 'appendage', remove button value(user id) from
+        // myUsers array and associated user permission from myUsersPermission array
+            $(document).off().on("click", ".appendage .clickMe", function(e) {
+                let index = myUsers.indexOf($(this).val());
+                myUsers.splice(index, 1);
+                myUsersPermissions.splice(index, 1)
+                $(this).parent().parent().parent().remove()
+            });
+            
+            // onClick of shareSubmit button, push checked checkboxes to mychechboxes array and 
+            // send ajax request to share files with selected users. Subsequently remove all users
+            // in the appendage div and close share modal.
+            $(".shareSubmit").on("click", function(e) {
+                $(".sample:checkbox:checked").each(function() {
+                    myCheckboxes.push($(this).val()); // changed this line
+                });
+
+                $.ajax({
+                    url:  "{% url 'share_file' %}", 
+                    data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                        myCheckboxes: myCheckboxes,
+                        myUsers: myUsers,
+                        myUsersPermissions: myUsersPermissions, 
+                        file_id: file_id
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+                $('.appendage').html("")
+                $(`#custom-modal-${file_id}`).modal("hide");
+            })
+
+            // onClick of renameSubmit, get text input value and send ajax request to rename file.
+            // close rename modal subsequently
+            $(".renameSubmit").on("click", function(e) {
+                rename_input = $(`#renameInput-${file_id}`).val()
+
+                $.ajax({
+                    url:  "{% url 'rename_file' %}", 
+                    data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                        file_id: file_id,
+                        rename_input: rename_input
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+                $(`#custom-modal2-${file_id}`).modal("hide");
+            })
+
+
+            // onClick of editPermissionSubmit, get permission value from select and send ajax request to
+            // edit permission. close edit permission modal after operation.
+            $(".editPermissionSubmit").on("click", function(e) {
+                permission_value = $(`#permissionSelect-${file_id}`).val()
+                console.log(permission_value)
+
+                $.ajax({
+                    url:  "{% url 'edit_file_permission' %}", 
+                    data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                        file_id: file_id,
+                        permission_value: permission_value
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+                $(`#custom-modal3-${file_id}`).modal("hide");
+            })
+
+
+            // onClick of recycle submit send ajax request to recycle file instance. 
+            // close recycle modal after operation is performed.
+            $(".recycleSubmit").on("click", function(e) {
+
+                $.ajax({
+                    url:  "{% url 'recycle_file' %}", 
+                    data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                        file_id: file_id,
+                    },
+                    type: "POST",
+                    dataType : "json",
+                })
+                
+                // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                .done(function(data) {
+                    console.log(data);
+                })
+                .always(function() {
+                    console.log('[Done]');
+                    // window.location.reload();
+                })
+
+                $(`#custom-modal4-${file_id}`).modal("hide");
+            })
+
+        // onclick of drop-click get selected <li> from dropdwon and make it text input value of 
+        // #sortInput associated with #sortForm, then submit sortForm.
+        $('.drop-click').on('click', function(){
+          let selected_value = $(this).val()
+          $('#sortInput').val(selected_value)
+          $('#sortForm').submit()
+        })
+        
+        // collapse side bar 
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+          });
+        
+        // Click on hidden file input field with id-uploadFolder onClick of of button with id- folderButton
+        $('#fileButton').on('click', function (){
+            $('#uploadFolder').click()
+        });
+        // Submit form onChange event of file input
+        $('#uploadFolder').on('change', function(){
+            $('#fileForm').submit()
+        })
+
+        // share file modal is shown on click of button with id - modal-button
+        $('.modal-button').on('click', function() {
+          $(`#custom-modal-${file_id}`).modal("show");
+        });
+
+        // delete users on shared file modal is shown on click of button with id - modal-button8
+        $('.modal-button8').on('click', function() {
+          $(`#custom-modal8-${file_id}`).modal("show");
+
+          const request_parameters = {
+            file_id, file_id
+          }
+
+          $.getJSON('/shared_with/', request_parameters)
+          
+            .then(response => {
+               // fade out the users_div, then:
+              $('.modal-replaceable2').fadeTo('slow', 0).promise().then(() => {
+                // replace the HTML contents
+                $('.modal-replaceable2').html(response['html_from_view'])
+                // fade-in the div with new contents
+                $('.modal-replaceable2').fadeTo('slow', 1)
+                $('.userModal2 .clickMe').off().on('click', function () {
+                  console.log('clicked')
+                  let shared_user = $(this).val()
+                  $.ajax({
+                        url:  "{% url 'delete_shared_user' %}", 
+                        data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                            file_id: file_id,
+                            shared_user: shared_user
+                        },
+                        type: "POST",
+                        dataType : "json",
+                    })
+                    
+                    // $.ajax().done(), $.ajax().fail(), $ajax().always() are upto you. Add/change accordingly
+                    .done(function(data) {
+                        console.log(data);
+                    })
+                    .always(function() {
+                        console.log('[Done]');
+                        // window.location.reload();
+                    })
+                    $(this).parent().parent().parent().remove()
+                })
+              })
+            })
+            .always(function(){
+              
+            })
+        });
+
+        // Rename file modal is shown onClick of button with id - modal-button2
+        $('.modal-button2').on('click', function() {
+          $(`#custom-modal2-${file_id}`).modal("show");
+        });
+
+        // Edit file permissions modal is shown onClick of button with id - modal-button3
+        $('.modal-button3').on('click', function() {
+          $(`#custom-modal3-${file_id}`).modal("show");
+        });
+
+        // Delete file modal is shown onClick of button with id - modal-button4
+        $('.modal-button4').on('click', function() {
+          $(`#custom-modal4-${file_id}`).modal("show");
+        });
+
+        // hide share file modal on click of button with id - closeModal
+        $('.closeModal').on('click', function() {
+          $(`#custom-modal-${file_id}`).modal("hide");
+        });
+
+         // hide rename file modal on click of button with id - closeModal2
+         $('.closeModal2').on('click', function() {
+          $(`#custom-modal2-${file_id}`).modal("hide");
+        });
+
+         // hide edit file permissions modal on click of button with id - closeModal3
+         $('.closeModal3').on('click', function() {
+          $(`#custom-modal3-${file_id}`).modal("hide");
+        });
+
+         // hide recycle file modal on click of button with id - closeModal4
+         $('.closeModal4').on('click', function() {
+          $(`#custom-modal4-${file_id}`).modal("hide");
+        });
+
+        // hide delete users on file  modal on click of button with id - closeModal8
+        $('.closeModal8').on('click', function() {
+          $(`#custom-modal8-${file_id}`).modal("hide");
+        });
+
+        // change row styling on click/unclick of checkbox
+        $(".form-check :checkbox").on('change', function(){
+          selected_files = $(".form-check :checkbox:checked").length
+          // console.log(selected_files)
+          $(".form-check :checkbox:checked").each(function(){
+            $(this).parent().parent().parent().parent().css("background-color", "#E7F5EE")
+            $(".files-selected").html(`${selected_files} Files selected`);
+          })
+          $(".form-check :checkbox:not(:checked)").each(function(){
+            $(this).parent().parent().parent().parent().css("background-color", "#FFFFFF")
+            $(".files-selected").html(`${selected_files} Files selected`);
+          })
+        })
+    });
+  </script>
+{% endblock js %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Delete User View" %}{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center vh-100" id="last_div">
+    <form class="" action="" method="post"> {% csrf_token %}
+        <div class="text-center mb-4">
+            <h2>Are you sure you want to delete user???</h2>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-4">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success" type="submit" id="deletePic">Delete user</button>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-success" href="{% url 'user_list' %}" id="loginButton">Go back</a>
+                    </div>
+                </div>
+                <div class="col-2"></div>
+            </div>
+            
+            
+            <!-- <input class="d-inline-block m-1 button btn-danger squared" type="submit" value="Confirm">
+            <a class="link d-inline-block m-1 button btn-dark squared" href="{% url 'user_list' %}">Go Back</a> -->
+        </div>
+        
+    </form>
+</div>
+
+
+
+{% endblock %}
