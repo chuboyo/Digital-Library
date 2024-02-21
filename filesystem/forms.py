@@ -24,7 +24,7 @@ class PublicFilesCreateForm(forms.ModelForm):
 # Class to create form for directory upload 
 class PublicFolderCreateForm(forms.ModelForm):
     filename = forms.FileField(required=False, widget=forms.FileInput(attrs=
-        {'multiple': True, 'webkitdirectory': True, 'directory': True}))
+        { 'webkitdirectory': True, 'directory': True}))
     
     def __init__(self,  *args, **kwargs):
         super(PublicFolderCreateForm, self).__init__(*args, **kwargs)
@@ -42,7 +42,7 @@ class PublicFolderCreateForm(forms.ModelForm):
 # Class to create form for multiple public file upload 
 class PublicFilesMultipleCreateForm(forms.ModelForm):
     filename = forms.FileField(required=False, widget=forms.FileInput(attrs=
-        {'multiple': True}))
+        {}))
     
     def __init__(self,  *args, **kwargs):
         super(PublicFilesMultipleCreateForm, self).__init__(*args, **kwargs)
@@ -95,7 +95,7 @@ class PrivateFilesCreateForm(forms.ModelForm):
 # Class to create form for private folder upload 
 class PrivateFolderCreateForm(forms.ModelForm):
     filename = forms.FileField(required=False, widget=forms.FileInput(attrs=
-        {'multiple': True, 'webkitdirectory': True, 'directory': True}))
+        {'webkitdirectory': True, 'directory': True}))
     
     def __init__(self,  *args, **kwargs):
         super(PrivateFolderCreateForm, self).__init__(*args, **kwargs)
@@ -113,7 +113,7 @@ class PrivateFolderCreateForm(forms.ModelForm):
 # Class to create form for multiple private  file upload 
 class PrivateFilesMultipleCreateForm(forms.ModelForm):
     filename = forms.FileField(required=False, widget=forms.FileInput(attrs=
-        {'multiple': True}))
+        {}))
     
     def __init__(self,  *args, **kwargs):
         super(PrivateFilesMultipleCreateForm, self).__init__(*args, **kwargs)

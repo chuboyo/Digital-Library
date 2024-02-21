@@ -78,7 +78,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # third party middlewares
+    'allauth.account.middleware.AccountMiddleware',
     'django_auto_logout.middleware.auto_logout',
+
 ]
 
 ROOT_URLCONF = 'fmoh_digital_library.urls'
