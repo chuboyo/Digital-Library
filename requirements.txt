@@ -1,6 +1,6 @@
 Django
 Psycopg2-binary
-django-allauth
+django-allauth==0.52.0
 Pillow
 django-auto-logout
 pytz

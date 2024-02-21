@@ -78,7 +78,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # third party middlewares
-    'allauth.account.middleware.AccountMiddleware',
+    # 'allauth.account.middleware.AccountMiddleware',
     'django_auto_logout.middleware.auto_logout',
 
 ]
@@ -211,6 +211,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 ACCOUNT_ADAPTER = 'users.adapters.ModifiedAccountAdapter'
 
